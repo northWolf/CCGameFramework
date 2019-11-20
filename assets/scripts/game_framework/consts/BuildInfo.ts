@@ -1,4 +1,4 @@
-class BuildInfo {
+export default class BuildInfo {
 	public IsDebug: boolean;
 	public ResourceModeUpdate: boolean;
 	public GameVersion: string;

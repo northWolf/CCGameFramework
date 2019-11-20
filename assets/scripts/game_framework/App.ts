@@ -7,6 +7,8 @@ import StateMachine from "./fsm/StateMachine";
 import StageUtils from "./utils/StageUtils";
 import ViewManager from "./mvc/ViewManager";
 import SceneManager from "./scene/manager/SceneManager";
+import BuildInfo from "./consts/BuildInfo";
+import GlobalInfo from "./consts/GlobalInfo";
 
 export default class App {
 
