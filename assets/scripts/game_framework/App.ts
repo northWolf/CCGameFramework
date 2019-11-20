@@ -4,6 +4,9 @@ import MathUtils from "./utils/MathUtils";
 import DateUtils from "./utils/DateUtils";
 import Log from "./utils/Log";
 import StateMachine from "./fsm/StateMachine";
+import StageUtils from "./utils/StageUtils";
+import ViewManager from "./mvc/ViewManager";
+import SceneManager from "./scene/manager/SceneManager";
 
 export default class App {
 
@@ -54,6 +57,13 @@ export default class App {
     // }
 
     /**
+     * Stage操作相关工具类
+     */
+    public static get StageUtils(): StageUtils {
+        return StageUtils.getInstance();
+    }
+
+    /**
      * 模块管理类
      * @type {ControllerManager}
      */
@@ -61,21 +71,21 @@ export default class App {
         return ControllerManager.getInstance();
     }
 
-    // /**
-    //  * View管理类
-    //  * @type {ViewManager}
-    //  */
-    // public static get ViewManager(): ViewManager {
-    //     return ViewManager.getInstance();
-    // }
+    /**
+     * View管理类
+     * @type {ViewManager}
+     */
+    public static get ViewManager(): ViewManager {
+        return ViewManager.getInstance();
+    }
 
-    // /**
-    //  * 场景管理类
-    //  * @type {SceneManager}
-    //  */
-    // public static get SceneManager(): SceneManager {
-    //     return SceneManager.getInstance();
-    // }
+    /**
+     * 场景管理类
+     * @type {SceneManager}
+     */
+    public static get SceneManager(): SceneManager {
+        return SceneManager.getInstance();
+    }
 
 
 

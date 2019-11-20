@@ -1,0 +1,33 @@
+export enum ViewConst {
+    Loading = 10000,
+    Login,
+    Home,
+    Friend,
+    Shop,
+    ShopDetal,
+    Warehouse,
+    Factory,
+    Task,
+    Daily,
+    Mail,
+    Gold_Select,
+    Settlement,
+    Create_Friend_Room,
+    Join_Friend_Room,
+    Chat,
+    /** 福利 */
+    Welfare,
+    /** 签到 */
+    SignIn,
+    /** 救济金 */
+    Relief,
+    Set,
+    Proclamation,
+    TotalSettlement,
+    DisMissRoom,
+    PersonalInfo,
+    Rule,
+    Game = 20000,
+    GameUI,
+    RpgGame,
+}

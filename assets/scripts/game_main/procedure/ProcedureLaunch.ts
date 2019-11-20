@@ -1,5 +1,9 @@
 import ProcedureBase from "../../game_framework/fsm/ProcedureBase";
 import Log from "../../game_framework/utils/Log";
+import App from "../../game_framework/App";
+import LoginScene from "../scene/LoginScene";
+import {SceneConsts} from "../consts/SceneConsts";
+import {ViewConst} from "../consts/ViewConst";
 
 export default class ProcedureLaunch extends ProcedureBase
 {
@@ -9,21 +13,30 @@ export default class ProcedureLaunch extends ProcedureBase
 
     public onInit(...args: any[]): void {
         super.onInit(args);
-        Log.info("init in ProcedureLaunch");
     }
 
     public onEnter(obj: Object = null): void {
         super.onEnter(obj);
-        Log.info("enter in ProcedureLaunch");
+        App.Init();
+        fgui.addLoadHandler();
+        fgui.GRoot.create();
+        this.initScene();
+        App.SceneManager.runScene(SceneConsts.Login);
+        App.ViewManager.open(ViewConst.Login);
     }
 
     public onUpdate(): void {
         super.onUpdate();
-        Log.info("update in ProcedureLaunch");
     }
 
     public onLeave(preKey: string): void {
         super.onLeave(preKey);
-        Log.info("Leave in ProcedureLaunch");
+    }
+
+    /**
+     * 初始化所有场景
+     */
+    private initScene(): void {
+        App.SceneManager.register(SceneConsts.Login, new LoginScene());
     }
 }
