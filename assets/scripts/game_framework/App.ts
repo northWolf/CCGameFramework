@@ -9,6 +9,11 @@ import ViewManager from "./mvc/ViewManager";
 import SceneManager from "./scene/manager/SceneManager";
 import BuildInfo from "./consts/BuildInfo";
 import GlobalInfo from "./consts/GlobalInfo";
+import MessageCenter from "./utils/MessageCenter";
+import HttpAPI from "./net/http/HttpAPI";
+import ArrayUtils from "./utils/ArrayUtils";
+import DeviceUtils from "./utils/DeviceUtils";
+import NetManager from "./net/NetManager";
 
 export default class App {
 
@@ -42,21 +47,29 @@ export default class App {
         return StateMachine.getInstance();
     }
 
-    // /**
-    //  * 简单Http请求
-    //  * @type {HttpAPI}
-    //  */
-    // public static get Http(): HttpAPI {
-    //     return HttpAPI.getInstance();
-    // }
+    /**
+     * 简单Http请求
+     * @type {HttpAPI}
+     */
+    public static get Http(): HttpAPI {
+        return HttpAPI.getInstance();
+    }
 
-    // /**
-    //  * 网络管理类
-    //  * @type {null}
-    //  */
-    // public static get Net(): NetManager {
-    //     return NetManager.getInstance();
-    // }
+    /**
+     * 网络管理类
+     * @type {null}
+     */
+    public static get Net(): NetManager {
+        return NetManager.getInstance();
+    }
+
+    /**
+     * 消息调度中心
+     * @type {MessageCenter}
+     */
+    public static get MessageCenter(): MessageCenter {
+        return MessageCenter.getInstance(0);
+    }
 
     /**
      * Stage操作相关工具类
@@ -89,8 +102,6 @@ export default class App {
         return SceneManager.getInstance();
     }
 
-
-
     /**
      * 日期工具类
      * @type {DateUtils}
@@ -115,6 +126,21 @@ export default class App {
         return DebugUtils.getInstance();
     }
 
+    /**
+     * 数组工具类
+     * @returns {any}
+     * @constructor
+     */
+    public static get ArrayUtils(): ArrayUtils {
+        return ArrayUtils.getInstance();
+    }
+
+    /**
+     * 设备工具类
+     */
+    public static get DeviceUtils(): DeviceUtils {
+        return DeviceUtils.getInstance();
+    }
 
     /**
      * 初始化函数

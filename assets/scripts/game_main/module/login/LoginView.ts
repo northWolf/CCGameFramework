@@ -3,6 +3,7 @@ import BaseFguiLayer from "../../../game_framework/layer/BaseFguiLayer";
 import BaseController from "../../../game_framework/mvc/controller/BaseController";
 import Log from "../../../game_framework/utils/Log";
 import FairyGUIUtil from "../../misc/FairyGUIUtil";
+import App from "../../../game_framework/App";
 
 export default class LoginView extends BaseFguiView {
 
@@ -35,6 +36,18 @@ export default class LoginView extends BaseFguiView {
 
         FairyGUIUtil.GFindChild(this._view,"n1").onClick(function () {
             Log.info("准备打开Basic");
+        }, this);
+
+        FairyGUIUtil.GFindChild(this._view,"n2").onClick(function () {
+            let _data = new Object();
+            _data["packageName"] = "com.cz.game";
+            _data["channelTag"] = "unknown";
+            _data["gameVersion"] = "1.0";
+            _data["platform"] = "android";
+           App.Http.httpGET("https://ares.hbwyzg.com/api/get_global_info",_data,function(response)
+           {
+               Log.info(response);
+           });
         }, this);
         Log.info("LoginView 创建成功");
     }
