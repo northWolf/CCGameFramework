@@ -3,16 +3,18 @@ import SCPacket from "./packet/SCPacket";
 import CSPacket from "./packet/CSPacket";
 import Log from "../../utils/Log";
 import PacketBase from "./packet/PacketBase";
+import ByteArray from "../../egret/core/utils/ByteArray";
+import EgretWebSocket from "../../egret/extension/socket/EgretWebSocket";
 
 export default class ByteArrayMsg implements BaseMsg {
 
-    protected _msgBuffer: egret.ByteArray;
+    protected _msgBuffer: ByteArray;
 
     /**
      * 构造函数
      */
     public constructor() {
-        this._msgBuffer = new egret.ByteArray();
+        this._msgBuffer = new ByteArray();
     }
 
     /**
@@ -36,7 +38,7 @@ export default class ByteArrayMsg implements BaseMsg {
      * @param msg
      */
     public send(netChannelName: string, msg: CSPacket): void {
-        var socket: WebSocket = App.Net.getNetChannel(netChannelName).getSocket();
+        var socket: EgretWebSocket = App.Net.getNetChannel(netChannelName).getSocket();
         var obj: any = this.encode(msg);
         if (obj) {
             obj.position = 0;

@@ -7,6 +7,8 @@ import CSPacket from "./packet/CSPacket";
 import Log from "../../utils/Log";
 import BaseClass from "../../base/BaseClass";
 import SocketConst from "./SocketConst";
+import EgretWebSocket from "../../egret/extension/socket/EgretWebSocket";
+import ByteArrayMsg from "./ByteArrayMsg";
 
 export default class Socket extends BaseClass {
 
@@ -20,7 +22,7 @@ export default class Socket extends BaseClass {
     private m_connectFlag: boolean;
     private m_host: string;
     private m_port: any;
-    private m_socket: WebSocket;
+    private m_socket: EgretWebSocket;
     private m_msg: BaseMsg;
     private m_isConnecting: boolean;
 
@@ -72,26 +74,20 @@ export default class Socket extends BaseClass {
      * 添加事件监听
      */
     private addEvents() {
-        let thisO = this;
-        this.m_socket.onopen = function (event) {
-            thisO.onSocketOpen();
-        };
-        this.m_socket.onmessage = function (event) {
-            thisO.onReceiveMessage(event);
-        };
-        this.m_socket.onerror = function (event) {
-            thisO.onSocketError();
-        };
-        this.m_socket.onclose = function (event) {
-            thisO.onSocketClose();
-        };
+        App.MessageCenter.addListener(SocketConst.SOCKET_CONNECT,this.onSocketOpen,this);
+        App.MessageCenter.addListener(SocketConst.SOCKET_DATA,this.onReceiveMessage,this);
+        App.MessageCenter.addListener(SocketConst.SOCKET_NOCONNECT,this.onSocketError,this);
+        App.MessageCenter.addListener(SocketConst.SOCKET_CLOSE,this.onSocketClose,this);
     }
 
     /**
      * 移除事件监听
      */
     private removeEvents(): void {
-
+        App.MessageCenter.removeListener(SocketConst.SOCKET_CONNECT,this.onSocketOpen,this);
+        App.MessageCenter.removeListener(SocketConst.SOCKET_DATA,this.onReceiveMessage,this);
+        App.MessageCenter.removeListener(SocketConst.SOCKET_NOCONNECT,this.onSocketError,this);
+        App.MessageCenter.removeListener(SocketConst.SOCKET_CLOSE,this.onSocketClose,this);
     }
 
     /**
@@ -211,15 +207,16 @@ export default class Socket extends BaseClass {
         let url = "ws: " + this.m_host + ":" + this.m_port;
         Log.info(url);
 
-        this.m_socket = new WebSocket(url);
-        this.m_socket.binaryType = "arraybuffer";
-
+        this.m_socket = new EgretWebSocket(this.m_host,this.m_port);
+        if (this.m_msg instanceof ByteArrayMsg) {
+            this.m_socket.type = EgretWebSocket.TYPE_BINARY;
+        }
         this.addEvents();
-        // if (this.m_host.indexOf("ws://") != -1 || this.m_host.indexOf("wss://") != -1) {
-        //     this.m_socket.connectByUrl(this.m_host + ":" + this.m_port);
-        // } else {
-        //     this.m_socket.connect(this.m_host, this.m_port);
-        // }
+        if (this.m_host.indexOf("ws://") != -1 || this.m_host.indexOf("wss://") != -1) {
+            this.m_socket.connectByUrl(this.m_host + ":" + this.m_port);
+        } else {
+            this.m_socket.connect(this.m_host, this.m_port);
+        }
     }
 
     /**
@@ -360,7 +357,7 @@ export default class Socket extends BaseClass {
      * 返回socket代理
      * @returns {WebSocket}
      */
-    public getSocket(): WebSocket {
+    public getSocket(): EgretWebSocket {
         return this.m_socket;
     }
 

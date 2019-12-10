@@ -67,18 +67,9 @@ export default class NetManager extends BaseClass {
 	 * @param port  网络频道端口
 	 * @returns {Socket} 要创建的网络频道。
 	 */
-	public createNetChannelWithIpPort(netChannelName: string, type: NetChannelType, ipstring: string, port: number, msgType: NetMsgType = NetMsgType.ByteArrayMsgByProtobuf): Socket {
+	public createNetChannelWithIpPort(netChannelName: string, type: NetChannelType, ipstring: string, port: number, msgFormatInstance: BaseMsg): Socket {
 		if (this.hasNetChannel(netChannelName)) return;
 		var netChannel: Socket = new Socket(netChannelName, type);
-		var msgFormatInstance: BaseMsg;
-		switch (msgType) {
-			case NetMsgType.ByteArrayMsgByProtobuf:
-				msgFormatInstance = new ByteArrayMsgByProtobuf();
-				break;
-			case NetMsgType.UTFMsgByJson:
-				msgFormatInstance = new UTFMsgByJson();
-				break;
-		}
 		netChannel.initServer(ipstring, port, msgFormatInstance);
 		this.m_NetChannels.add(netChannelName, netChannel);
 		return netChannel;
@@ -90,19 +81,10 @@ export default class NetManager extends BaseClass {
 	 * @param ipstring  网络频道IP地址
 	 * @param port  网络频道端口
 	 */
-	public setNetChannelConnection(netChannelName: string, ipstring: string, port: number, msgType: NetMsgType = NetMsgType.ByteArrayMsgByProtobuf): void {
+	public setNetChannelConnection(netChannelName: string, ipstring: string, port: number, msgFormatInstance: BaseMsg): void {
 		if (netChannelName == null || netChannelName == "") return;
 		var netChannel: Socket = this.getNetChannel(netChannelName);
 		if (netChannel) {
-			var msgFormatInstance: BaseMsg;
-			switch (msgType) {
-				case NetMsgType.ByteArrayMsgByProtobuf:
-					msgFormatInstance = new ByteArrayMsgByProtobuf();
-					break;
-				case NetMsgType.UTFMsgByJson:
-					msgFormatInstance = new UTFMsgByJson();
-					break;
-			}
 			netChannel.initServer(ipstring, port, msgFormatInstance);
 		} else {
 			Log.info("网络通道 " + netChannelName + " 不存在!");

@@ -1,6 +1,6 @@
 export default class GlobalInfo {
-	public GlobalServerIp: string;
-	public GlobalServerPort: number;
+	public GateServerIp: string;
+	public GateServerPort: number;
 	public GameVersionCheckUrl: string;
 	public ResourceVersionCheckUrl: string;
 	public LoginNoticePathPrefix: string;

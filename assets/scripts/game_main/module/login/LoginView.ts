@@ -4,6 +4,7 @@ import BaseController from "../../../game_framework/mvc/controller/BaseControlle
 import Log from "../../../game_framework/utils/Log";
 import FairyGUIUtil from "../../misc/FairyGUIUtil";
 import App from "../../../game_framework/App";
+import ByteArrayMsgByProtobuf from "../../net/ByteArrayMsgByProtobuf";
 
 export default class LoginView extends BaseFguiView {
 
@@ -48,6 +49,12 @@ export default class LoginView extends BaseFguiView {
            {
                Log.info(response);
            });
+        }, this);
+
+        FairyGUIUtil.GFindChild(this._view,"n3").onClick(function () {
+            App.Net.createNetChannelWithIpPort(BruceNetChannel.NetChannel_Hall.toString(),
+                NetChannelType.SOCKET, App.GlobalInfo.GateServerIp, App.GlobalInfo.GateServerPort,new ByteArrayMsgByProtobuf());
+            App.Net.setNetChannelReconnectFlagAndMaxCount(BruceNetChannel.NetChannel_Hall.toString(), true, 3);
         }, this);
         Log.info("LoginView 创建成功");
     }
