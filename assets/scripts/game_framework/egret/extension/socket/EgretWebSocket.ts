@@ -60,7 +60,7 @@ import HTML5WebSocket from "./web/HTML5WebSocket";
  * @includeExample extension/socket/EgretWebSocket.ts
  * @language zh_CN
  */
-export default class EgretWebSocket extends Object {
+export default class EgretWebSocket {
     /**
      * Send and receive data in character string format
      * @version Egret 2.4
@@ -126,7 +126,6 @@ export default class EgretWebSocket extends Object {
      * @language zh_CN
      */
     constructor(host: string = "", port: number = 0) {
-        super();
         this._connected = false;
         this._writeMessage = "";
         this._readMessage = "";
@@ -232,7 +231,7 @@ export default class EgretWebSocket extends Object {
             this._readByte._writeUint8Array(new Uint8Array(message));
         }
         // egret.ProgressEvent.dispatchProgressEvent(this, egret.ProgressEvent.SOCKET_DATA);
-        App.MessageCenter.dispatch(SocketConst.SOCKET_DATA);
+        App.MessageCenter.dispatch(SocketConst.SOCKET_DATA, message);
     }
 
     /**

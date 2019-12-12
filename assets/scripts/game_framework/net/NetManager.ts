@@ -3,6 +3,7 @@ import Log from "../utils/Log";
 import CSPacket from "./socket/packet/CSPacket";
 import BaseClass from "../base/BaseClass";
 import Socket from "./socket/Socket";
+import {NetChannelType} from "./socket/SocketEnum";
 
 export default class NetManager extends BaseClass {
 

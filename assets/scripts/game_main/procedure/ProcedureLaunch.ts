@@ -4,6 +4,7 @@ import App from "../../game_framework/App";
 import LoginScene from "../scene/LoginScene";
 import {SceneConsts} from "../consts/SceneConsts";
 import {ViewConst} from "../consts/ViewConst";
+import GlobalInfo from "../../game_framework/consts/GlobalInfo";
 
 export default class ProcedureLaunch extends ProcedureBase
 {
@@ -18,6 +19,9 @@ export default class ProcedureLaunch extends ProcedureBase
     public onEnter(obj: Object = null): void {
         super.onEnter(obj);
         App.Init();
+        App.GlobalInfo = new GlobalInfo();
+        App.GlobalInfo.GateServerIp = "121.40.165.18";
+        App.GlobalInfo.GateServerPort = 8800;
         fgui.addLoadHandler();
         fgui.GRoot.create();
         this.initScene();

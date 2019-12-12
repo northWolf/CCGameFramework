@@ -68,7 +68,7 @@ export default class App {
      * @type {MessageCenter}
      */
     public static get MessageCenter(): MessageCenter {
-        return MessageCenter.getInstance(0);
+        return MessageCenter.getInstance(1);
     }
 
     /**

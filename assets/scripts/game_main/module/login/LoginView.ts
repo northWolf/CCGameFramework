@@ -5,6 +5,8 @@ import Log from "../../../game_framework/utils/Log";
 import FairyGUIUtil from "../../misc/FairyGUIUtil";
 import App from "../../../game_framework/App";
 import ByteArrayMsgByProtobuf from "../../net/ByteArrayMsgByProtobuf";
+import {BruceNetChannel} from "../../net/BruceNetChannel";
+import {NetChannelType} from "../../../game_framework/net/socket/SocketEnum";
 
 export default class LoginView extends BaseFguiView {
 
@@ -52,10 +54,12 @@ export default class LoginView extends BaseFguiView {
         }, this);
 
         FairyGUIUtil.GFindChild(this._view,"n3").onClick(function () {
+            Log.info("准备连接服务器");
             App.Net.createNetChannelWithIpPort(BruceNetChannel.NetChannel_Hall.toString(),
                 NetChannelType.SOCKET, App.GlobalInfo.GateServerIp, App.GlobalInfo.GateServerPort,new ByteArrayMsgByProtobuf());
             App.Net.setNetChannelReconnectFlagAndMaxCount(BruceNetChannel.NetChannel_Hall.toString(), true, 3);
-        }, this);
+            App.Net.connectNetChannel(BruceNetChannel.NetChannel_Hall.toString());
+            }, this);
         Log.info("LoginView 创建成功");
     }
 

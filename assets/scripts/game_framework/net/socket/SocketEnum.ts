@@ -1,7 +1,7 @@
 /**
  * 网络类型
  */
-enum NetChannelType {
+export enum NetChannelType {
     HTTP,
     SOCKET,
 }
@@ -9,7 +9,7 @@ enum NetChannelType {
 /**
  * 消息格式类型
  */
-enum NetMsgType {
+export enum NetMsgType {
     ByteArrayMsgByProtobuf,
     UTFMsgByJson,
 }

@@ -9,6 +9,8 @@ import BaseClass from "../../base/BaseClass";
 import SocketConst from "./SocketConst";
 import EgretWebSocket from "../../egret/extension/socket/EgretWebSocket";
 import ByteArrayMsg from "./ByteArrayMsg";
+import {NetChannelType} from "./SocketEnum";
+import ByteArray from "../../egret/core/utils/ByteArray";
 
 export default class Socket extends BaseClass {
 
@@ -21,7 +23,7 @@ export default class Socket extends BaseClass {
     private m_reconnectCount: number = 0;
     private m_connectFlag: boolean;
     private m_host: string;
-    private m_port: any;
+    private m_port: number;
     private m_socket: EgretWebSocket;
     private m_msg: BaseMsg;
     private m_isConnecting: boolean;
@@ -97,7 +99,6 @@ export default class Socket extends BaseClass {
         this.m_reconnectCount = 0;
         this.m_isConnecting = true;
         this.m_isManualDisconnection = false;
-
         if (this.m_connectFlag && this.m_needReconnect) {
             App.MessageCenter.dispatch(this.m_netChannelName + SocketConst.SOCKET_RECONNECT);
             Log.info("与 " + this.m_netChannelName + " 服务器重新连接成功。");
@@ -149,8 +150,8 @@ export default class Socket extends BaseClass {
      */
     private onReceiveMessage(e: MessageEvent): void {
         if (this.m_socket != null) {
-            var msgBuffer: ArrayBuffer = new ArrayBuffer(e.data);
-           // this.m_socket.readBytes(msgBuffer);
+            var msgBuffer: ByteArray = new ByteArray();
+            this.m_socket.readBytes(msgBuffer);
             var packet: SCPacket = this.m_msg.decode(msgBuffer);
             if (packet != null) {
                 var protocolId: string = this.m_msg.getProtocolId(packet);
@@ -187,7 +188,7 @@ export default class Socket extends BaseClass {
      * @param port 端口
      * @param msg 消息发送接受处理类
      */
-    public initServer(host: string, port: any, msg: BaseMsg): void {
+    public initServer(host: string, port: number, msg: BaseMsg): void {
         this.m_host = host;
         this.m_port = port;
         this.m_msg = msg;
@@ -204,7 +205,7 @@ export default class Socket extends BaseClass {
                 return;
             }
         }
-        let url = "ws: " + this.m_host + ":" + this.m_port;
+        let url = "ws://" + this.m_host + ":" + this.m_port;
         Log.info(url);
 
         this.m_socket = new EgretWebSocket(this.m_host,this.m_port);

@@ -1,4 +1,4 @@
-enum PacketType {
+export enum PacketType {
 
     /**
      * 未定义。
