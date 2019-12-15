@@ -7,3 +7,4 @@ assets/scripts/.idea/
 tsconfig.json
 jsconfig.json
 creator.d.ts
+build/
