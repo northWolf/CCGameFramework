@@ -5,6 +5,7 @@ import LoginScene from "../scene/LoginScene";
 import {SceneConsts} from "../consts/SceneConsts";
 import {ViewConst} from "../consts/ViewConst";
 import GlobalInfo from "../../game_framework/consts/GlobalInfo";
+import ResourceItem from "../../game_framework/resource/ResourceItem";
 
 export default class ProcedureLaunch extends ProcedureBase
 {
@@ -18,7 +19,13 @@ export default class ProcedureLaunch extends ProcedureBase
 
     public onEnter(obj: Object = null): void {
         super.onEnter(obj);
-        App.Init();
+        App.ResManager.loadRes("config/build_info",cc.JsonAsset,this.onBuildInfoConfigLoadComplete.bind(this));
+    }
+
+    private onBuildInfoConfigLoadComplete(err: string, res: ResourceItem):void
+    {
+        App.BuildInfo = res.getRes().json;
+        App.init();
         App.GlobalInfo = new GlobalInfo();
         App.GlobalInfo.GateServerIp = "121.40.165.18";
         App.GlobalInfo.GateServerPort = 8800;

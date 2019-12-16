@@ -27,12 +27,12 @@ export default class LoginView extends BaseFguiView {
     public open(...param: any[]): void {
         super.open(param);
 
-        fgui.UIPackage.loadPackage("UI/MainMenu", this.onUILoaded.bind(this));
+        fgui.UIPackage.loadPackage("ui/MainMenu", this.onUILoaded.bind(this));
     }
 
     private onUILoaded()
     {
-        fgui.UIPackage.addPackage("UI/MainMenu");
+        fgui.UIPackage.addPackage("ui/MainMenu");
         this._view = fgui.UIPackage.createObject("MainMenu", "Main").asCom;
         this._view.makeFullScreen();
         this.addToParent();

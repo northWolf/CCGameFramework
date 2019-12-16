@@ -1,0 +1,14 @@
+{
+    "IsDebug":true,
+    "ResourceModeUpdate":false,
+    "GameVersion": "1.0.0",
+    "HttpServer":"https://global.shangjinhuyu.com/GlobalInfo_Mahjong/global_service.php",
+    "GlobalInfoId":"w_wan_jiangxi_java_test_h5",
+    "SDKPlatform":0,
+    "GameLanguage":"chinesesimplified",
+    "AddGameLanguageDir":false,
+    "IsInputAccountLogin":false,
+    "GameKind":313,
+    "Env":1,
+    "PackageName":"com.cz.game"
+}

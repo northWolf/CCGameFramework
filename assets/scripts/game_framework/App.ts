@@ -14,6 +14,8 @@ import HttpAPI from "./net/http/HttpAPI";
 import ArrayUtils from "./utils/ArrayUtils";
 import DeviceUtils from "./utils/DeviceUtils";
 import NetManager from "./net/NetManager";
+import LocalStorageUtils from "./utils/LocalStorageUtils";
+import ResourceManager from "./resource/ResourceManager";
 
 export default class App {
 
@@ -24,8 +26,8 @@ export default class App {
 
     /**
      * 游戏框架版本
-    */
-    public static CCGameFrameworkVersion:string = "1.0";
+     */
+    public static CCGameFrameworkVersion: string = "1.0";
 
     /**
      * 打包配置数据
@@ -48,6 +50,14 @@ export default class App {
     }
 
     /**
+     * 资源管理器
+     * @type {ResourceManager}
+     */
+    public static get ResManager(): ResourceManager {
+        return ResourceManager.getInstance();
+    }
+
+    /**
      * 简单Http请求
      * @type {HttpAPI}
      */
@@ -57,7 +67,7 @@ export default class App {
 
     /**
      * 网络管理类
-     * @type {null}
+     * @type {NetManager}
      */
     public static get Net(): NetManager {
         return NetManager.getInstance();
@@ -146,10 +156,11 @@ export default class App {
      * 初始化函数
      * @constructor
      */
-    public static Init(): void {
+    public static init(): void {
         App.DebugUtils.isOpen(true);
-        Log.info(App.CCGameFrameworkName,App.CCGameFrameworkVersion);
+        Log.info(App.CCGameFrameworkName, App.CCGameFrameworkVersion);
         Log.info("当前引擎版本: ", cc.ENGINE_VERSION);
         App.DebugUtils.setThreshold(5);
+        LocalStorageUtils.setHashID(App.BuildInfo.PackageName);
     }
 }

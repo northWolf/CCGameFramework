@@ -10,4 +10,5 @@ export default class BuildInfo {
 	public IsInputAccountLogin: boolean;
 	public GameKind: number;
 	public Env:number;
+	public PackageName:string;
 }
