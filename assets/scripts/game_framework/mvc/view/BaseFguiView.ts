@@ -1,9 +1,7 @@
-const {ccclass,property} = cc._decorator;
 import BaseController from "../controller/BaseController";
 import BaseFguiLayer from "../../layer/BaseFguiLayer";
 import FairyGUIUtil from "../../../game_main/misc/FairyGUIUtil";
 
-@ccclass
 export default class BaseFguiView extends cc.Node
 {
     protected _view: fgui.GComponent;
