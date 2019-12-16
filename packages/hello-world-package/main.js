@@ -12,6 +12,7 @@ module.exports = {
   messages: {
     'say-hello' () {
       Editor.log('Hello World!');
+      Editor.Panel.open('hello-world-package');
     }
   },
 };

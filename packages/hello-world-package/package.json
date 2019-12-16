@@ -8,5 +8,13 @@
     "Packages/Hello World": {
       "message": "hello-world-package:say-hello"
     }
-  }
+  },
+  "panel": {
+    "main": "panel/index.js",
+    "type": "dockable",
+    "title": "Simple Panel",
+    "width": 400,
+    "height": 300
+  },
+  "scene-script": "scene-walker.js"
 }
