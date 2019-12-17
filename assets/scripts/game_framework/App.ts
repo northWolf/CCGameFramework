@@ -17,6 +17,7 @@ import NetManager from "./net/NetManager";
 import LocalStorageUtils from "./utils/LocalStorageUtils";
 import ResourceManager from "./resource/ResourceManager";
 import SDKManager from "./sdk/SDKManager";
+import PathUtils from "./utils/PathUtils";
 
 export default class App {
 
@@ -158,6 +159,15 @@ export default class App {
      */
     public static get SDK(): SDKManager {
         return SDKManager.getInstance();
+    }
+
+    /**
+     * 路径实用类
+     * @returns {PathUtil}
+     * @constructor
+     */
+    public static get PathUtil(): PathUtils {
+        return PathUtils.getInstance();
     }
 
     /**

@@ -9,6 +9,8 @@ import {BruceNetChannel} from "../../net/BruceNetChannel";
 import {NetChannelType} from "../../../game_framework/net/socket/SocketEnum";
 import ChannelID from "../../../game_framework/sdk/ChannelID";
 import DefaultChannel from "../../sdk/default/DefaultChannel";
+import LoginConst from "./LoginConst";
+import ResourceItem from "../../../game_framework/resource/ResourceItem";
 
 export default class LoginView extends BaseFguiView {
 
@@ -28,13 +30,13 @@ export default class LoginView extends BaseFguiView {
      */
     public open(...param: any[]): void {
         super.open(param);
-
-        fgui.UIPackage.loadPackage("ui/MainMenu", this.onUILoaded.bind(this));
+         App.ResManager.loadDir(LoginConst.LOGIN_UI_PKG.path, this.onUILoaded.bind(this));
+         //fgui.UIPackage.loadPackage(App.PathUtil.getCombinePath(LoginConst.LOGIN_UI_PKG.path,LoginConst.LOGIN_UI_PKG.name), this.onUILoaded.bind(this));
     }
 
-    private onUILoaded() {
-        fgui.UIPackage.addPackage("ui/MainMenu");
-        this._view = fgui.UIPackage.createObject("MainMenu", "Main").asCom;
+    private onUILoaded(err: string, res: ResourceItem) {
+        fgui.UIPackage.addPackage(App.PathUtil.getCombinePath(LoginConst.LOGIN_UI_PKG.path,LoginConst.LOGIN_UI_PKG.name));
+        this._view = fgui.UIPackage.createObject(LoginConst.LOGIN_UI_PKG.name, "Main").asCom;
         this._view.makeFullScreen();
         this.addToParent();
 
@@ -64,11 +66,18 @@ export default class LoginView extends BaseFguiView {
         FairyGUIUtil.GFindChild(this._view, "n4").onClick(function () {
             Log.info("准备渠道登录");
             App.SDK.init(new DefaultChannel(ChannelID.DEFAULT));
-            App.SDK.getChannel().login(null,function () {
+            App.SDK.getChannel().login(null, function () {
                 Log.info("登录成功");
             });
 
         }, this);
+
+        FairyGUIUtil.GFindChild(this._view, "n5").onClick(function () {
+            Log.info("卸载MainMenu UI包资源");
+            fgui.UIPackage.removePackage(LoginConst.LOGIN_UI_PKG.name);
+            App.ResManager.releaseDir(LoginConst.LOGIN_UI_PKG.path);
+        }, this);
+
 
         Log.info("LoginView 创建成功");
     }

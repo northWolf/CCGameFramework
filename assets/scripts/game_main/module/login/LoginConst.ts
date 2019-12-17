@@ -3,6 +3,11 @@ export default class LoginConst {
     public static LOGIN_SDK_C2S: number = 10002;
     public static LOGIN_RES_S2C: number = 10003;
     public static REFRESH_PLAY_COUNT: number = 10004;
+
+    public static LOGIN_UI_PKG = {
+        "name":"MainMenu",
+        "path":"ui/MainMenu"
+    }
 }
 
 enum LoginBgClickStatus {
