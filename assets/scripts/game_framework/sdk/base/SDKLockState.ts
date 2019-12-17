@@ -1,4 +1,3 @@
-
 export default class SDKLockState {
 
     //是否有返回大厅按钮，只有嵌入到app中时才会为true。
@@ -7,25 +6,21 @@ export default class SDKLockState {
     //是否可以修改名称
     private editName: boolean = false;
 
-    setHaveHome(flag){
+    setHaveHome(flag) {
         this.haveHome = flag;
     }
 
-    isHaveHome(){
+    isHaveHome() {
         return this.haveHome;
     }
 
-    setEditName(flag){
+    setEditName(flag) {
         this.editName = flag;
     }
 
-    canEditName(){
+    canEditName() {
         return this.editName;
     }
-
-    
-    
-
 
 
 }

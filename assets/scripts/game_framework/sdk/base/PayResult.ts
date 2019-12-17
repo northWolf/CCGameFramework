@@ -1,5 +1,4 @@
-
-export default class PayResult  {
+export default class PayResult {
 
     private selfOrderID;
 
@@ -8,23 +7,23 @@ export default class PayResult  {
     private success: boolean = true;
 
 
-    isSuccess(){
+    isSuccess() {
         return this.success;
     }
 
-    setSelfOrderID(id){
+    setSelfOrderID(id) {
         this.selfOrderID = id;
     }
 
-    setSDKOrderID(id){
+    setSDKOrderID(id) {
         this.sdkOrderID = id;
     }
 
-    getSelfOrderID(){
+    getSelfOrderID() {
         return this.selfOrderID;
     }
 
-    getSDKOrderID(){
+    getSDKOrderID() {
         return this.sdkOrderID;
     }
 

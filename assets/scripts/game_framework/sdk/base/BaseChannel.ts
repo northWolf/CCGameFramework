@@ -2,13 +2,11 @@ import LoginInterface from "./LoginInterface";
 import PayInterface from "./PayInterface";
 import SDKLockState from "./SDKLockState";
 import InterstitialAd from "./InterstitialAd";
-import { isNull } from "../../framework/tools/Define";
 import BaseBanner from "./BaseBanner";
-import ShakeManager from "../../framework/audio/ShakeManager";
-import BaseRewardAd, { RewardADState } from "./BaseRewardAd";
+import BaseRewardAd, {RewardADState} from "./BaseRewardAd";
 import BaseRecorder from "./BaseRecorder";
 import BaseShare from "./BaseShare";
-import { LoginCallback, ShareCallback } from "../ChannelID";
+import {LoginCallback, ShareCallback} from "../ChannelID";
 
 
 export default class BaseChannel {
@@ -76,13 +74,12 @@ export default class BaseChannel {
     }
 
 
-
     isHaveStore() {
         return this.payMgr != undefined;
     }
 
     /**
-     * 
+     *
      */
     isHaveShare() {
         return this.share != undefined;
@@ -148,19 +145,15 @@ export default class BaseChannel {
     }
 
 
-
-
-
-
-    login(account,func:LoginCallback) {
-        this.loginMgr.login(account,func)
+    login(account, func: LoginCallback) {
+        this.loginMgr.login(account, func)
     }
 
     logout() {
         this.loginMgr.logout();
     }
 
-    showBanner(layerName:string) {
+    showBanner(layerName: string) {
         if (this.bannerAd) {
             this.bannerAd.showBanner(layerName);
         }
@@ -172,14 +165,14 @@ export default class BaseChannel {
         }
     }
 
-    showShare(title: string, func: ShareCallback,isShowRecorder:boolean = false) {
+    showShare(title: string, func: ShareCallback, isShowRecorder: boolean = false) {
         if (this.isHaveShare()) {
-            this.share.share(title, func,isShowRecorder)
+            this.share.share(title, func, isShowRecorder)
         }
     }
 
 
-    followResult(func:(result:boolean)=>void){
+    followResult(func: (result: boolean) => void) {
 
     }
 
@@ -210,7 +203,7 @@ export default class BaseChannel {
     }
 
     isHaveRewardAd(): boolean {
-        return !isNull(this.rewardAd);
+        return this.rewardAd != null;
     }
 
     getRewardAdState(): RewardADState {
@@ -219,13 +212,15 @@ export default class BaseChannel {
         }
         return RewardADState.close;
     }
+
     isHaveFollow() {
         return false;
     }
 
     isHaveRecorder() {
-        return !isNull(this.recorder)
+        return this.recorder != null;
     }
+
     // isHaveExchangeVolume(ignore:boolean = false){
     //     if(!ignore){
     //         return this.exchagneVolume && cc.sys.os != cc.sys.OS_IOS;
@@ -254,8 +249,8 @@ export default class BaseChannel {
 
     /**
      * 微量小程序联盟使用，获得多个游戏icon和二维码
-     * @param num 
-     * @param func 
+     * @param num
+     * @param func
      */
     getAds(num: number, func: (result: any) => void) {
 
@@ -275,21 +270,22 @@ export default class BaseChannel {
     intoLobby() {
 
     }
+
     isHaveGameBox() {
         return false;
     }
+
     isHaveRank() {
         return false;
     }
+
     postMessage(message) {
 
     }
 
 
     vibarate() {
-        if (ShakeManager.instance().getFlag()) {
-            this.vibrateShort();
-        }
+        this.vibrateShort();
     }
 
     protected vibrateShort() {
@@ -299,7 +295,7 @@ export default class BaseChannel {
     /**
      * 战斗是否有banner
      */
-    isBattleHaveBanner(){
+    isBattleHaveBanner() {
         return false
     }
 

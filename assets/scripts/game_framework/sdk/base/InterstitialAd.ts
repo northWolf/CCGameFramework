@@ -1,10 +1,9 @@
+export default interface InterstitialAd {
 
-export default interface InterstitialAd  {
 
+    show(func: Function);
 
-    show(func:Function);
+    load(id: string);
 
-    load(id:string);
-
-    isLoad():boolean;
+    isLoad(): boolean;
 }

@@ -1,10 +1,7 @@
-import { LoginCallback } from "../ChannelID";
+import {LoginCallback} from "../ChannelID";
 
-export default interface LoginInterface  {
+export default interface LoginInterface {
+    logout();
 
-
-
-    logout();    
-
-    login(account,fun:LoginCallback);
+    login(account, fun: LoginCallback);
 }

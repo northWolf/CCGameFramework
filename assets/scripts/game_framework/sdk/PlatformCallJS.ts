@@ -1,11 +1,10 @@
-import SDKManager from "./SDKManager";
-import VideoAdInterface from "./base/VideoAdInterface";
 import BaseRewardAd from "./base/BaseRewardAd";
+import App from "../App";
 
 class PlatformCallJS {
 
     rewardAdCallback(num: number) {
-        let rewardAd: BaseRewardAd = SDKManager.getChannel().getRewardAd();
+        let rewardAd: BaseRewardAd = App.SDKManager.getChannel().getRewardAd();
         if (rewardAd) {
             rewardAd.callback(num);
         }

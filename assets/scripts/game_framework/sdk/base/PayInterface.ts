@@ -1,7 +1,4 @@
-
-export default interface PayInterface  {
-
-
+export default interface PayInterface {
     /**
      * 创建订单后调用sdk的付费功能进行付费。
      * @param model 购买项的模型
@@ -11,7 +8,7 @@ export default interface PayInterface  {
 
     /**
      * 消耗商品
-     * @param orderID 
+     * @param orderID
      */
     consume(orderID);
 

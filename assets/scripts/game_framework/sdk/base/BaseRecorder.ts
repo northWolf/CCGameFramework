@@ -1,42 +1,54 @@
-import BaseModel from "../../framework/base/model/BaseModel";
-import DataEvent from "../DataEvent";
-import { ItemState } from "../../framework/tools/Define";
+import SDKDataEvent from "../SDKDataEvent";
+import BaseModel from "../../mvc/model/BaseModel";
+import App from "../../App";
 
+export enum ItemState {
+    NOT_GET,
+    GOT
+}
 
 export default class BaseRecorder extends BaseModel {
-
-
     protected recorder: any;
 
-    protected videoPath:string = null;
+    protected videoPath: string = null;
 
-    protected state:ItemState = ItemState.NOT_GET
-    start(obj: any) { }
-    pause() { }
-    resume(){}
-    stop(isSave:boolean = true) {}
-    //记录精彩的视频片段
-    recordClip( object){}
+    protected state: ItemState = ItemState.NOT_GET
 
-    changeState(s){
-        this.state = s;
-        this.publish(DataEvent.CHANGE_RECORDER_STATE,s)
+    start(obj: any) {
     }
 
-    getVideoPath(){
+    pause() {
+    }
+
+    resume() {
+    }
+
+    stop(isSave: boolean = true) {
+    }
+
+    //记录精彩的视频片段
+    recordClip(object) {
+    }
+
+    changeState(s) {
+        this.state = s;
+        App.MessageCenter.dispatch(SDKDataEvent.CHANGE_RECORDER_STATE, s);
+    }
+
+    getVideoPath() {
         return this.videoPath;
     }
 
-    isOpen(){
+    isOpen() {
         return this.state == ItemState.GOT;
     }
 
-    isClose(){
+    isClose() {
         return this.state == ItemState.NOT_GET;
     }
 
-    getState(){
+    getState() {
         return this.state;
     }
-    
+
 }

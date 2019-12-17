@@ -1,12 +1,11 @@
-
 export default interface VideoAdInterface {
 
-    createVideoAd(id:string,callback:Function):void;
+    createVideoAd(id: string, callback: Function): void;
 
-    show(callback: (isFinish: boolean) => void):void;
+    show(callback: (isFinish: boolean) => void): void;
 
-    callback(num:number);
+    callback(num: number);
 
-    isLoad():boolean;
+    isLoad(): boolean;
 
 }
