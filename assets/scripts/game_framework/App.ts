@@ -18,7 +18,6 @@ import LocalStorageUtils from "./utils/LocalStorageUtils";
 import ResourceManager from "./resource/ResourceManager";
 import SDKManager from "./sdk/SDKManager";
 import PathUtils from "./utils/PathUtils";
-import ShaderManager from "./shader/ShaderManager";
 
 export default class App {
 
@@ -169,15 +168,6 @@ export default class App {
      */
     public static get PathUtil(): PathUtils {
         return PathUtils.getInstance();
-    }
-
-    /**
-     * Shader管理器
-     * @returns {ShaderManager}
-     * @constructor
-     */
-    public static get Shader(): ShaderManager {
-        return ShaderManager.getInstance();
     }
 
     /**
