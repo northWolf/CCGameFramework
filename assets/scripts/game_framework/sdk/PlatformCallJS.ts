@@ -4,7 +4,7 @@ import App from "../App";
 class PlatformCallJS {
 
     rewardAdCallback(num: number) {
-        let rewardAd: BaseRewardAd = App.SDKManager.getChannel().getRewardAd();
+        let rewardAd: BaseRewardAd = App.SDK.getChannel().getRewardAd();
         if (rewardAd) {
             rewardAd.callback(num);
         }

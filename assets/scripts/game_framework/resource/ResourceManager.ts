@@ -215,7 +215,7 @@ export default class ResourceManager extends BaseClass {
                 if (item.getLoadCount() <= 3) {
                     cc.director.preloadScene(url, func);
                 } else {
-                    cc.error(" res load fail sceneName is " + url);
+                    Log.error(" res load fail sceneName is " + url);
                     this.resCache[ts] = null;
                     callback(err, null);
                 }
@@ -248,7 +248,7 @@ export default class ResourceManager extends BaseClass {
                 if (item.getLoadCount() <= 3) {
                     cc.loader.load(url, func);
                 } else {
-                    cc.error(" res load fail sceneName is " + url);
+                    Log.error(" res load fail, resName is " + url);
                     this.resCache[ts] = null;
                     callback(err, null);
                 }
@@ -262,7 +262,6 @@ export default class ResourceManager extends BaseClass {
 
             }
         }
-        // cc.director.preloadScene(url, func);
         cc.loader.load(url, func);
     }
 }
