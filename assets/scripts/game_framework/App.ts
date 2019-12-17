@@ -156,7 +156,7 @@ export default class App {
     /**
      * 渠道SDK管理器
      */
-    public static get SDKManager(): SDKManager {
+    public static get SDK(): SDKManager {
         return SDKManager.getInstance();
     }
 

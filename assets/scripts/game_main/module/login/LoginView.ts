@@ -7,7 +7,6 @@ import App from "../../../game_framework/App";
 import ByteArrayMsgByProtobuf from "../../net/ByteArrayMsgByProtobuf";
 import {BruceNetChannel} from "../../net/BruceNetChannel";
 import {NetChannelType} from "../../../game_framework/net/socket/SocketEnum";
-import SDKManager from "../../../game_framework/sdk/SDKManager";
 import ChannelID from "../../../game_framework/sdk/ChannelID";
 import DefaultChannel from "../../sdk/default/DefaultChannel";
 
@@ -64,8 +63,8 @@ export default class LoginView extends BaseFguiView {
 
         FairyGUIUtil.GFindChild(this._view, "n4").onClick(function () {
             Log.info("准备渠道登录");
-            App.SDKManager.init(new DefaultChannel(ChannelID.DEFAULT));
-            App.SDKManager.getChannel().login(null,function () {
+            App.SDK.init(new DefaultChannel(ChannelID.DEFAULT));
+            App.SDK.getChannel().login(null,function () {
                 Log.info("登录成功");
             });
 
