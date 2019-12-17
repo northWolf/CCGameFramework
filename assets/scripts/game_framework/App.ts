@@ -16,6 +16,7 @@ import DeviceUtils from "./utils/DeviceUtils";
 import NetManager from "./net/NetManager";
 import LocalStorageUtils from "./utils/LocalStorageUtils";
 import ResourceManager from "./resource/ResourceManager";
+import SDKManager from "./sdk/SDKManager";
 
 export default class App {
 
@@ -150,6 +151,13 @@ export default class App {
      */
     public static get DeviceUtils(): DeviceUtils {
         return DeviceUtils.getInstance();
+    }
+
+    /**
+     * 渠道SDK管理器
+     */
+    public static get SDKManager(): SDKManager {
+        return SDKManager.getInstance();
     }
 
     /**
