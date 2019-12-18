@@ -24,7 +24,6 @@ export default class ResourceItem {
     getRes() {
         this.useCount++;
         this.addCount();
-        // return cc.loader.getRes(this.url,this.type);
         return this.res;
     }
     setLoadingFlag(flag){

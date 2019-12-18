@@ -32,6 +32,11 @@ export default class App {
     public static CCGameFrameworkVersion: string = "1.0";
 
     /**
+     *   访问参数
+     */
+    public static UrlParameters: Object = null;
+
+    /**
      * 打包配置数据
      * @type {null}
      */

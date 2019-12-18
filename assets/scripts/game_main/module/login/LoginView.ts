@@ -30,7 +30,7 @@ export default class LoginView extends BaseFguiView {
      */
     public open(...param: any[]): void {
         super.open(param);
-         App.ResManager.loadDir(LoginConst.LOGIN_UI_PKG.path, this.onUILoaded.bind(this));
+         App.ResManager.loadResDir(LoginConst.LOGIN_UI_PKG.path, this.onUILoaded.bind(this));
          //fgui.UIPackage.loadPackage(App.PathUtil.getCombinePath(LoginConst.LOGIN_UI_PKG.path,LoginConst.LOGIN_UI_PKG.name), this.onUILoaded.bind(this));
     }
 
