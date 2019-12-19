@@ -1,6 +1,5 @@
-
 import BaseClass from "../../base/BaseClass";
-
+import {isNull} from "../../utils/GlobalDefine";
 /**
  * 简单Http请求
  */
@@ -22,6 +21,7 @@ export default class HttpAPI extends BaseClass {
         let encodedData = encodeURI(this.encode(data));
         let url: string = data ? `${path}?${encodedData}` : path;
         let request: XMLHttpRequest = new XMLHttpRequest();
+        request.setRequestHeader('Access-Control-Allow-Origin', '*');
         request.responseType = "text";
         request.onload = function () {
             if (request.status >= 200 && request.status < 400) {
@@ -33,7 +33,7 @@ export default class HttpAPI extends BaseClass {
             }
         };
 
-        request.open("GET",url,true);
+        request.open("GET", url, true);
         request.send();
     }
 
@@ -59,11 +59,11 @@ export default class HttpAPI extends BaseClass {
                 onIOError();
             }
         };
-        request.open("POST",path,true);
+        request.open("POST", path, true);
         request.send(encodedData);
     }
 
-    private encode(data: any): string {
+    public encode(data: any): string {
         if (!data) return null;
         let paramURL: string = '';
         for (let key in data) {
@@ -72,6 +72,29 @@ export default class HttpAPI extends BaseClass {
         if (paramURL.length > 1) {
             return `${paramURL.substring(0, paramURL.length - 1)}`
         }
+        paramURL = escape(encodeURI(paramURL));
         return paramURL;
+    }
+
+    public decode(paramURL: string): any {
+        var data = {};
+        if (isNull(paramURL)) {
+            return data;
+        }
+        var name, value;
+        paramURL = unescape(decodeURI(paramURL));
+        var indexOfParamStart = paramURL.indexOf("?");
+        paramURL = paramURL.substr(indexOfParamStart + 1); //取得所有参数   stringvar.substr(start [, length ]
+
+        var arr = paramURL.split("&"); //各个参数放到数组里
+        for (var i = 0; i < arr.length; i++) {
+            indexOfParamStart = arr[i].indexOf("=");
+            if (indexOfParamStart > 0) {
+                name = arr[i].substring(0, indexOfParamStart);
+                value = arr[i].substr(indexOfParamStart + 1);
+                data[name] = value;
+            }
+        }
+        return data;
     }
 }

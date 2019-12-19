@@ -180,7 +180,7 @@ export default class App {
      * @constructor
      */
     public static init(): void {
-        App.DebugUtils.isOpen(true);
+        App.DebugUtils.isOpen(App.BuildInfo.IsDebug || App.UrlParameters["isDebug"]);
         Log.info(App.CCGameFrameworkName, App.CCGameFrameworkVersion);
         Log.info("当前引擎版本: ", cc.ENGINE_VERSION);
         App.DebugUtils.setThreshold(5);
