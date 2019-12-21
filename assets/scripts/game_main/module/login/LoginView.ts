@@ -78,6 +78,20 @@ export default class LoginView extends BaseFguiView {
             App.ResManager.releaseDir(LoginConst.LOGIN_UI_PKG.path);
         }, this);
 
+        FairyGUIUtil.GFindChild(this._view, "n6").onClick(function () {
+            Log.info("播放背景音乐");
+            App.SoundManager.playBg("sound/bgm_lobby");
+        }, this);
+
+        FairyGUIUtil.GFindChild(this._view, "n7").onClick(function () {
+            Log.info("停止背景音乐");
+            App.SoundManager.stopBg();
+        }, this);
+
+        FairyGUIUtil.GFindChild(this._view, "n8").onClick(function () {
+            Log.info("播放金币音效");
+            App.SoundManager.playEffect("sound/sfx_coins");
+        }, this);
 
         Log.info("LoginView 创建成功");
     }
