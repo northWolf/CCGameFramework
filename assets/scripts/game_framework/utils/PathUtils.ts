@@ -72,6 +72,9 @@ export default class PathUtils extends BaseClass {
      * 从带后缀名的文件名中提取出文件名
      */
     public getFileNameWithoutExtension(fileName: string) {
+        if (fileName.lastIndexOf('.') == -1)
+            return fileName;
+
         return fileName.substr(0, fileName.lastIndexOf('.'));
     }
 
