@@ -18,6 +18,7 @@ import LocalStorageUtils from "./utils/LocalStorageUtils";
 import ResourceManager from "./resource/ResourceManager";
 import SDKManager from "./sdk/SDKManager";
 import PathUtils from "./utils/PathUtils";
+import SoundManager from "./sound/SoundManager";
 
 export default class App {
 
@@ -94,6 +95,14 @@ export default class App {
     public static get StageUtils(): StageUtils {
         return StageUtils.getInstance();
     }
+
+    /**
+     * 音乐管理类
+     */
+    public static get SoundManager(): SoundManager {
+        return SoundManager.getInstance();
+    }
+
 
     /**
      * 模块管理类
