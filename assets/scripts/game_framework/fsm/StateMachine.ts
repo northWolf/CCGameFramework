@@ -31,6 +31,11 @@ export default class StateMachine extends BaseClass {
 		this._owner = owner;
 	}
 
+	public getOwner():Object
+	{
+		return this._owner;
+	}
+
 	/**
 	 * 注册状态 
 	 * @param key
