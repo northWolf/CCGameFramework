@@ -21,7 +21,6 @@ export default class HttpAPI extends BaseClass {
         let encodedData = encodeURI(this.encode(data));
         let url: string = data ? `${path}?${encodedData}` : path;
         let request: XMLHttpRequest = new XMLHttpRequest();
-        request.setRequestHeader('Access-Control-Allow-Origin', '*');
         request.responseType = "text";
         request.onload = function () {
             if (request.status >= 200 && request.status < 400) {
@@ -34,7 +33,9 @@ export default class HttpAPI extends BaseClass {
         };
 
         request.open("GET", url, true);
+        request.setRequestHeader('Access-Control-Allow-Origin', '*');
         request.send();
+
     }
 
     /**
