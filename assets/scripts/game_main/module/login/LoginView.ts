@@ -30,12 +30,12 @@ export default class LoginView extends BaseFguiView {
      */
     public open(...param: any[]): void {
         super.open(param);
-         App.ResManager.loadResDir(LoginConst.LOGIN_UI_PKG.path, this.onUILoaded.bind(this));
-         //fgui.UIPackage.loadPackage(App.PathUtil.getCombinePath(LoginConst.LOGIN_UI_PKG.path,LoginConst.LOGIN_UI_PKG.name), this.onUILoaded.bind(this));
+        App.ResManager.loadResDir(LoginConst.LOGIN_UI_PKG.path, this.onUILoaded.bind(this));
+        //fgui.UIPackage.loadPackage(App.PathUtil.getCombinePath(LoginConst.LOGIN_UI_PKG.path,LoginConst.LOGIN_UI_PKG.name), this.onUILoaded.bind(this));
     }
 
     private onUILoaded(err: string, res: ResourceItem) {
-        fgui.UIPackage.addPackage(App.PathUtil.getCombinePath(LoginConst.LOGIN_UI_PKG.path,LoginConst.LOGIN_UI_PKG.name));
+        fgui.UIPackage.addPackage(App.PathUtil.getCombinePath(LoginConst.LOGIN_UI_PKG.path, LoginConst.LOGIN_UI_PKG.name));
         this._view = fgui.UIPackage.createObject(LoginConst.LOGIN_UI_PKG.name, "Main").asCom;
         this._view.makeFullScreen();
         this.addToParent();
@@ -93,6 +93,15 @@ export default class LoginView extends BaseFguiView {
             App.SoundManager.playEffect("sound/sfx_coins");
         }, this);
 
+        FairyGUIUtil.GFindChild(this._view, "n9").onClick(function () {
+            Log.info("插入龙骨特效到UI");
+            App.ResManager.loadRes("animations/hall_act_xlch", cc.Asset, function () {
+                var asset = App.ResManager.getRes("animations/hall_act_xlch", cc.Asset);
+                var actorNode = cc.instantiate(asset);
+                actorNode.parent = FairyGUIUtil.GFindChild(this._view, "n10").node;
+            }.bind(this));
+        }, this);
+        
         Log.info("LoginView 创建成功");
     }
 
@@ -100,14 +109,25 @@ export default class LoginView extends BaseFguiView {
      * 面板关闭执行函数，用于子类继承
      * @param param 参数
      */
-    public close(...param: any[]): void {
+    public
+
+    close(...param
+              :
+              any[]
+    ):
+        void {
         super.close(param);
     }
 
     /**
      * 设置登录界面背景可点击状态
      */
-    public setLoginBgClickStatus(_status: number) {
+    public
+
+    setLoginBgClickStatus(_status
+                              :
+                              number
+    ) {
         this.m_LoginBgClickStatus = _status;
     }
 
@@ -116,14 +136,21 @@ export default class LoginView extends BaseFguiView {
      * @param userName
      * @param pwd
      */
-    private login(): void {
+    private
 
+    login()
+        :
+        void {
     }
 
     /**
      * 登陆成功处理
      */
-    public loginSuccess(): void {
+    public
+
+    loginSuccess()
+        :
+        void {
         // TODO登陆成功处理
 
     }
