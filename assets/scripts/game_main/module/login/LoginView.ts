@@ -101,7 +101,7 @@ export default class LoginView extends BaseFguiView {
                 actorNode.parent = FairyGUIUtil.GFindChild(this._view, "n10").node;
             }.bind(this));
         }, this);
-        
+
         Log.info("LoginView 创建成功");
     }
 
@@ -109,25 +109,14 @@ export default class LoginView extends BaseFguiView {
      * 面板关闭执行函数，用于子类继承
      * @param param 参数
      */
-    public
-
-    close(...param
-              :
-              any[]
-    ):
-        void {
+    public close(...param: any[]): void {
         super.close(param);
     }
 
     /**
      * 设置登录界面背景可点击状态
      */
-    public
-
-    setLoginBgClickStatus(_status
-                              :
-                              number
-    ) {
+    public setLoginBgClickStatus(_status: number) {
         this.m_LoginBgClickStatus = _status;
     }
 
@@ -136,21 +125,13 @@ export default class LoginView extends BaseFguiView {
      * @param userName
      * @param pwd
      */
-    private
-
-    login()
-        :
-        void {
+    private login(): void {
     }
 
     /**
      * 登陆成功处理
      */
-    public
-
-    loginSuccess()
-        :
-        void {
+    public loginSuccess(): void {
         // TODO登陆成功处理
 
     }
