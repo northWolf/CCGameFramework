@@ -19,6 +19,7 @@ import ResourceManager from "./resource/ResourceManager";
 import SDKManager from "./sdk/SDKManager";
 import PathUtils from "./utils/PathUtils";
 import SoundManager from "./sound/SoundManager";
+import TimerManager from "./utils/TimerManager";
 
 export default class App {
 
@@ -182,6 +183,15 @@ export default class App {
      */
     public static get PathUtil(): PathUtils {
         return PathUtils.getInstance();
+    }
+
+    /**
+     * 计时器
+     * @returns {TimerManager}
+     * @constructor
+     */
+    public static get TimerManager(): TimerManager {
+        return TimerManager.getInstance();
     }
 
     /**

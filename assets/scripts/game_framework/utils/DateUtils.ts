@@ -9,7 +9,7 @@ export default class DateUtils extends BaseClass {
     }
 
     public now(): number {
-        return new Date().getMilliseconds();
+        return new Date().getTime();
     }
 
     /**
