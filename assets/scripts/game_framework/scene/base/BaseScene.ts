@@ -1,8 +1,9 @@
 import BaseSpriteLayer from "../../layer/BaseSpriteLayer";
-import BaseUILayer from "../../layer/BaseUILayer";
+import BaseCCUILayer from "../../layer/BaseCCUILayer";
 import BaseFguiLayer from "../../layer/BaseFguiLayer";
 
 import App from "../../App";
+
 /**
  * Scene基类
  */
@@ -39,10 +40,10 @@ export default class BaseScene {
      */
     public addLayer(layer: IBaseLayer): void {
         if (layer instanceof BaseSpriteLayer) {
-            App.StageUtils.getStage().addChild(layer.node);
+            App.StageUtils.getStage().addChild(layer.container);
             this._layers.push(layer);
-        } else if (layer instanceof BaseUILayer) {
-            App.StageUtils.getUIStage().addChild(layer.node);
+        } else if (layer instanceof BaseCCUILayer) {
+            App.StageUtils.getCCUIStage().addChild(layer.container);
             this._layers.push(layer);
         } else if (layer instanceof BaseFguiLayer) {
             fgui.GRoot.inst.addChild(layer);
@@ -56,10 +57,10 @@ export default class BaseScene {
      */
     public addLayerAt(layer: IBaseLayer, index: number): void {
         if (layer instanceof BaseSpriteLayer) {
-            App.StageUtils.getStage().addChild(layer.node, index);
+            App.StageUtils.getStage().addChild(layer.container, index);
             this._layers.push(layer);
-        } else if (layer instanceof BaseUILayer) {
-            App.StageUtils.getUIStage().addChild(layer.node, index);
+        } else if (layer instanceof BaseCCUILayer) {
+            App.StageUtils.getCCUIStage().addChild(layer.container, index);
             this._layers.push(layer);
         } else if (layer instanceof BaseFguiLayer) {
             fgui.GRoot.inst.addChildAt(layer, index);
@@ -73,10 +74,10 @@ export default class BaseScene {
      */
     public removeLayer(layer: IBaseLayer): void {
         if (layer instanceof BaseSpriteLayer) {
-            App.StageUtils.getStage().removeChild(layer.node);
+            App.StageUtils.getStage().removeChild(layer.container);
             this._layers.splice(this._layers.indexOf(layer), 1);
-        } else if (layer instanceof BaseUILayer) {
-            App.StageUtils.getUIStage().removeChild(layer.node);
+        } else if (layer instanceof BaseCCUILayer) {
+            App.StageUtils.getCCUIStage().removeChild(layer.container);
             this._layers.splice(this._layers.indexOf(layer), 1);
         } else if (layer instanceof BaseFguiLayer) {
             fgui.GRoot.inst.removeChild(layer);
@@ -90,9 +91,9 @@ export default class BaseScene {
      */
     public layerRemoveAllChild(layer: IBaseLayer): void {
         if (layer instanceof BaseSpriteLayer) {
-            layer.node.removeAllChildren();
-        } else if (layer instanceof BaseUILayer) {
-            (<BaseUILayer>layer).node.removeAllChildren();
+            layer.container.removeAllChildren();
+        } else if (layer instanceof BaseCCUILayer) {
+            layer.container.removeAllChildren();
         } else if (layer instanceof BaseFguiLayer) {
             layer.removeChildren();
         }

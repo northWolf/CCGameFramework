@@ -1,6 +1,6 @@
 import BaseSpriteLayer from "./BaseSpriteLayer";
 import BaseFguiLayer from "./BaseFguiLayer";
-import BaseUILayer from "./BaseUILayer";
+import BaseCCUILayer from "./BaseCCUILayer";
 
 /**
  * 游戏层级类
@@ -45,7 +45,7 @@ export default class LayerManager {
 
     /**
      * 启动Loading专用层
-     * @type {BaseUILayer}
+     * @type {BaseCCUILayer}
      */
-    public static UI_Loading: BaseUILayer = new BaseUILayer();
+    public static UI_Loading: BaseCCUILayer = new BaseCCUILayer();
 }

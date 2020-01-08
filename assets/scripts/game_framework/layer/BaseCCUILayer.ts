@@ -1,9 +1,9 @@
-import BaseSpriteView from "../mvc/view/BaseSpriteView";
+import BaseCCUIView from "../mvc/view/BaseCCUIView";
 
-const {ccclass,property} = cc._decorator;
+const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class BaseSpriteLayer implements IBaseLayer {
+export default class BaseCCUILayer implements IBaseLayer {
     _container: cc.Node;
 
     public constructor() {
@@ -16,17 +16,17 @@ export default class BaseSpriteLayer implements IBaseLayer {
         return this._container;
     }
 
-    public getChild(child:BaseSpriteView):void
+    public getChild(child:BaseCCUIView):void
     {
         this._container.getChildByUuid(child.displayObject.uuid);
     }
 
-    public addChild(child:BaseSpriteView):void
+    public addChild(child:BaseCCUIView):void
     {
         this._container.addChild(child.displayObject);
     }
 
-    public removeChild(child:BaseSpriteView):void
+    public removeChild(child:BaseCCUIView):void
     {
         this._container.removeChild(child.displayObject);
     }
