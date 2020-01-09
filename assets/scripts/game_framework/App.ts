@@ -20,6 +20,7 @@ import SDKManager from "./sdk/SDKManager";
 import PathUtils from "./utils/PathUtils";
 import SoundManager from "./sound/SoundManager";
 import TimerManager from "./utils/TimerManager";
+import StringUtils from "./utils/StringUtils";
 
 export default class App {
 
@@ -193,6 +194,14 @@ export default class App {
     public static get TimerManager(): TimerManager {
         return TimerManager.getInstance();
     }
+
+    /**
+     * 字符串工具类
+     */
+    public static get StringUtils(): StringUtils {
+        return StringUtils.getInstance();
+    }
+
 
     /**
      * 初始化函数
