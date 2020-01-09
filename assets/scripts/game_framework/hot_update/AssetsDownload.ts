@@ -30,9 +30,6 @@ export default class AssetsDownload {
     public onFaild;
     public onNoNetwork;
 
-
-    private debugRes: boolean = true;
-
     /**
      *  分析并获取需要更新的资源
      *  */
@@ -41,7 +38,7 @@ export default class AssetsDownload {
         this._localManifest = localManifest;
         this._remoteManifest = remoteManifest;
 
-        this._nocache = (new Date()).getTime();
+        this._nocache = App.DateUtils.now();
 
         this._downloadUnits = [];
         this._completeUnits = [];
@@ -67,7 +64,7 @@ export default class AssetsDownload {
         if (this._items.length > 0) {
             this._downloadAsset();
         } else {
-            cc.log("【更新】无更新文件，更新完成");
+            Log.info("【更新】无更新文件，更新完成");
             if (this.onComplete)
                 this.onComplete();
         }
@@ -79,12 +76,13 @@ export default class AssetsDownload {
     private _analysisDownloadUnits(): void {
         for (var key in this._remoteManifest.assets) {
             if (this._localManifest.assets.hasOwnProperty(key)) {
-                if (this.debugRes || this._remoteManifest.assets[key]["md5"] != this._localManifest.assets[key]["md5"]) {
-                    // cc.log("【更新】准备下载更新的资源 {0}".format(key));
+                // 远程版本的文件 MD5 值和本地不同时文件需要下载
+                if (HotUpdateConfig.debugRes || this._remoteManifest.assets[key]["md5"] != this._localManifest.assets[key]["md5"]) {
+                    Log.info("【更新】准备下载更新的资源 ", key);
                     this._addDownloadUnits(key);
                 }
             } else {
-                // cc.log("【更新】准备下载本是不存在的资源 {0}".format(key));
+                Log.info("【更新】准备下载本是不存在的资源 ", key);
                 this._addDownloadUnits(key);
             }
         }
@@ -96,18 +94,20 @@ export default class AssetsDownload {
     private _analysisDeleteUnits(): void {
         for (var key in this._localManifest.assets) {
             if (this._remoteManifest.assets.hasOwnProperty(key) == false) {
-                // cc.log("【更新】准备删除的资源{0}".format(key));
+                Log.info("【更新】准备删除的资源 ", key);
                 this._deleteUnits.push(key);
             }
         }
     }
 
-    /** 添加下载单位 */
+    /**
+     *  添加下载单位
+     **/
     private _addDownloadUnits(key: string): void {
         if (this._remoteManifest.assets[key]["state"] != true) {
-            this._downloadUnits.push(key);                             // 远程版本的文件 MD5 值和本地不同时文件需要下载
+            this._downloadUnits.push(key);
         } else {
-            this._downloadComplete++;                                  // 恢复状态时的下载完成数量
+            this._downloadComplete++;
         }
     }
 
@@ -118,7 +118,8 @@ export default class AssetsDownload {
 
     /** 下载资源 */
     private _downloadAsset(): void {
-        if (HotUpdateConfig.testUpdate) this._remoteManifest.server = HotUpdateConfig.testCdn;
+        if (HotUpdateConfig.testUpdate)
+            this._remoteManifest.server = HotUpdateConfig.testCdn;
 
         var relativePath: string = this._items.shift();
         // @ts-ignore
@@ -136,7 +137,7 @@ export default class AssetsDownload {
             this._downloadComplete++;
 
             if (HotUpdateConfig.debugProgress)
-                Log.info("【更新】进度 {0}/{1}，当前有 {2} 个资源并行下载", this._downloadComplete, this._totalUnits, this._concurrentCurrent);
+                Log.info(App.StringUtils.Format("【更新】进度 {0}/{1}，当前有 {2} 个资源并行下载", this._downloadComplete, this._totalUnits, this._concurrentCurrent));
 
             // 还原并发数量
             this._concurrentCurrent--;
@@ -157,8 +158,8 @@ export default class AssetsDownload {
             this._downloadFailed++;
 
 
-            Log.info("【更新】下载远程路径为 {0} 的文件失败，错误码为 {1}", url, error);
-            Log.info("【更新】进度 {0}/{1}, 总处理文件数据为 {2}", this._downloadComplete, this._totalUnits, this._downloadComplete + this._downloadFailed);
+            Log.info(App.StringUtils.Format("【更新】下载远程路径为 {0} 的文件失败，错误码为 {1}", url, error));
+            Log.info(App.StringUtils.Format("【更新】进度 {0}/{1}, 总处理文件数据为 {2}", this._downloadComplete, this._totalUnits, this._downloadComplete + this._downloadFailed));
 
             this._isUpdateCompleted();
 
@@ -173,8 +174,89 @@ export default class AssetsDownload {
         }
     }
 
+    /** 下载失败的资源 */
+    _downloadFailedAssets() {
+        // 下载失败的文件数量重置
+        this._downloadFailed = 0;
+        this._downloadUnits = this._failedUnits;
+        this._failedUnits = [];
+        this._items = this._downloadUnits.slice(0);
+
+        if (this._items.length > 0) {
+            this._downloadAsset();
+        }
+    }
+
+    /** 判断是否全部更新完成 */
+    _isUpdateCompleted() {
+        var handleCount = this._downloadComplete + this._downloadFailed;                    // 处理完成数量
+
+        if (this._totalUnits == this._downloadComplete) {                                   // 全下载完成
+            Log.info("【更新】更新完成");
+
+            // 触发热更完成事件
+            if (this.onComplete) this.onComplete();
+
+            // 删除本地比服务器多出的文件
+            this._deleteAssets();
+        } else if (this._totalUnits == handleCount) {                                         // 全处理完成，有下载失败的文件，需要重试
+            Log.info("【更新】下载文件总数量　　：", this._totalUnits);
+            Log.info("【更新】下载成功的文件数量：", this._downloadComplete);
+            Log.info("【更新】下载失败的文件数量：", this._downloadFailed);
+
+            // 更新失败的次数加 1
+            this._failCount++;
+
+            if (this._failCount < 3) {
+                Log.info(App.StringUtils.Format("【更新】更新重试第 {0} 次", this._failCount.toString()));
+
+                this._downloadFailedAssets();
+            } else {
+                Log.info("【更新】更新失败");
+
+                // 触发热更失败事件
+                if (this.onFaild) this.onFaild();
+            }
+        } else if (this._items.length > 0 && this._concurrentCurrent < HotUpdateConfig.concurrent) {      // 队列下载
+            this._downloadAsset();
+        }
+    }
+
+    /** 删除本地比服务器多出的文件 */
+    _deleteAssets() {
+        for (var i = 0; i < this._deleteUnits.length; i++) {
+            var relativePath = this._deleteUnits[i];
+            // @ts-ignore
+            var filePath = cc.path.join(this._storagePath, relativePath);
+            if (jsb.fileUtils.removeFile(filePath)) {
+                Log.info(App.StringUtils.Format("【更新】版本多余资源 {0} 删除成功", filePath));
+            } else {
+                Log.info(App.StringUtils.Format("【更新】版本多余资源 {0} 删除失败", filePath));
+            }
+            ;
+        }
+    }
+
+    /** 文件保存到本地 */
+    _saveAsset(relativePath, asset) {
+        if (cc.sys.isNative) {
+            // @ts-ignore
+            var storeDirectory = cc.path.join(this._storagePath, relativePath.substr(0, relativePath.lastIndexOf("/")));
+            // @ts-ignore
+            var storePath = cc.path.join(this._storagePath, relativePath);
+
+            // 存储目录
+            if (jsb.fileUtils.isDirectoryExist(storeDirectory) == false) {
+                jsb.fileUtils.createDirectory(storeDirectory);
+            }
+
+            // 存储文件
+            jsb.fileUtils.writeDataToFile(new Uint8Array(asset), storePath);
+        }
+    }
+
     /** 规避 HTTP 缓存问题 */
-    _noCache(url: string): string {
+    private _noCache(url: string): string {
         return url + "?t=" + this._nocache;
     }
 }
