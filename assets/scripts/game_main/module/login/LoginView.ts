@@ -5,7 +5,7 @@ import Log from "../../../game_framework/utils/Log";
 import FairyGUIUtil from "../../misc/FairyGUIUtil";
 import App from "../../../game_framework/App";
 import ByteArrayMsgByProtobuf from "../../net/ByteArrayMsgByProtobuf";
-import {BruceNetChannel} from "../../net/BruceNetChannel";
+import {DefaultNetChannel} from "../../net/DefaultNetChannel";
 import {NetChannelType} from "../../../game_framework/net/socket/SocketEnum";
 import ChannelID from "../../../game_framework/sdk/ChannelID";
 import DefaultChannel from "../../sdk/default/DefaultChannel";
@@ -31,7 +31,6 @@ export default class LoginView extends BaseFguiView {
     public open(...param: any[]): void {
         super.open(param);
         App.ResManager.loadResDir(LoginConst.LOGIN_UI_PKG.path, this.onUILoaded.bind(this));
-        //fgui.UIPackage.loadPackage(App.PathUtil.getCombinePath(LoginConst.LOGIN_UI_PKG.path,LoginConst.LOGIN_UI_PKG.name), this.onUILoaded.bind(this));
     }
 
     private onUILoaded(err: string, res: ResourceItem) {
@@ -57,10 +56,10 @@ export default class LoginView extends BaseFguiView {
 
         FairyGUIUtil.GFindChild(this._view, "n3").onClick(function () {
             Log.info("准备连接服务器");
-            App.Net.createNetChannelWithIpPort(BruceNetChannel.NetChannel_Hall.toString(),
+            App.Net.createNetChannelWithIpPort(DefaultNetChannel.NetChannel_Hall.toString(),
                 NetChannelType.SOCKET, App.GlobalInfo.GateServerIp, App.GlobalInfo.GateServerPort, new ByteArrayMsgByProtobuf());
-            App.Net.setNetChannelReconnectFlagAndMaxCount(BruceNetChannel.NetChannel_Hall.toString(), true, 3);
-            App.Net.connectNetChannel(BruceNetChannel.NetChannel_Hall.toString());
+            App.Net.setNetChannelReconnectFlagAndMaxCount(DefaultNetChannel.NetChannel_Hall.toString(), true, 3);
+            App.Net.connectNetChannel(DefaultNetChannel.NetChannel_Hall.toString());
         }, this);
 
         FairyGUIUtil.GFindChild(this._view, "n4").onClick(function () {

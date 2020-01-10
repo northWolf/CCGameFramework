@@ -1,5 +1,6 @@
 import BaseRewardAd from "../../../game_framework/sdk/base/BaseRewardAd";
-import JsNativeBridge from "../../tools/JsNativeBridge";
+import JsNativeBridge from "../../../game_framework/utils/JsNativeBridge";
+
 
 export default class GoogleAppVideoAd extends BaseRewardAd {
 

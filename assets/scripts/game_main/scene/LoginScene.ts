@@ -25,7 +25,7 @@ export default class LoginScene extends BaseScene {
         this.addLayer(LayerManager.UI_Popup);
         this.addLayer(LayerManager.UI_Message);
         this.addLayer(LayerManager.UI_Tips);
-
+        this.addLayer(LayerManager.UI_Loading);
         // 初始化该scene的所有视图控制器
         this.initViewController();
     }
