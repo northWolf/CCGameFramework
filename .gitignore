@@ -8,3 +8,5 @@ tsconfig.json
 jsconfig.json
 creator.d.ts
 build/
+build-update/
+packages/.idea/
