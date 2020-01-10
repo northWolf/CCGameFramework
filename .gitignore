@@ -10,3 +10,5 @@ creator.d.ts
 build/
 build-update/
 packages/.idea/
+assets/resources/version.meta
+assets/resources/version/

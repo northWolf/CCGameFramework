@@ -1,0 +1,7 @@
+inbuilt模块 有一句话
+
+cocos creator里面， 定义一个 类成员变量
+private com:fgui.GComponent = new fgui.GComponent;
+
+这样静态赋值 为什么不行啊， 静态无法分析到fgui这个命名空间吗？
+egret里是可以的
