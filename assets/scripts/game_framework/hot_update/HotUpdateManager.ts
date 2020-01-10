@@ -1,11 +1,15 @@
 import AssetsManager, {AssetEvent} from "./AssetsManager";
 import HotUpdateConfig from "./HotUpdateConfig";
+import App from "../App";
+import LocalStorageUtils from "../utils/LocalStorageUtils";
 
 export default class HotUpdateManager {
-    private _updates = {};            // 更新模块集合
-    private _queue = [];            // 更新对列
+    public static readonly ASSET_UPDATE_NO_COMPLETE = "update_no_complete";
+
+    private _updates = {};            // 模块更新管理器集合
+    private _queue = [];            // 更新队列
     private _isUpdating: boolean = false;         // 是否正在更新中
-    private _current = null;          // 当前正在更新的模块
+    private _current:AssetsManager = null;          // 当前正在更新的模块
     private _noComplete = {};            // 上次未完成的热更项
 
     private assetManager: AssetsManager;
@@ -22,38 +26,43 @@ export default class HotUpdateManager {
 
     /**
      * 获取模块版本信息
-     * @param localVersionCb(function)    本地版本信息加载完成
-     * @param remoteVersionCb(function)   远程版本信息加载完成
+     * @param localVersionLoadComplete(function)    本地版本信息加载完成
+     * @param remoteVersionLoadComplete(function)   远程版本信息加载完成
      *
      */
-    getModules(remoteVersionCb) {
-        if (!cc.sys.isNative) {
-            if (remoteVersionCb) remoteVersionCb();
+    public getModules(remoteVersionLoadComplete) {
+        if (!App.DeviceUtils.IsNative) {
+            if (remoteVersionLoadComplete)
+                remoteVersionLoadComplete();
             return;
         }
 
-        this.assetManager.check(function (modules, versions) {
+        this.assetManager.checkVersion(function (modules, versions) {
             this.modules = modules;
             this.versions = versions;
-            if (remoteVersionCb) remoteVersionCb();
+            if (remoteVersionLoadComplete)
+                remoteVersionLoadComplete();
         }.bind(this));
     }
 
-    /** 载入没更新完的模块状态 */
-    load() {
-        if (!cc.sys.isNative) return;
+    /**
+     * 载入未更新完的热更项
+     * */
+    public load() {
+        if (!App.DeviceUtils.IsNative)
+            return;
 
-        var data = cc.sys.localStorage.getItem("update_no_complete");
+        var data = LocalStorageUtils.getItem(HotUpdateManager.ASSET_UPDATE_NO_COMPLETE);
         if (data) {
             var json = JSON.parse(data);
             for (var i = 0; i < json.length; i++) {
                 this._noComplete[json[i]] = json[i];
             }
-            cc.sys.localStorage.removeItem("update_no_complete");
+            LocalStorageUtils.removeItem(HotUpdateManager.ASSET_UPDATE_NO_COMPLETE);
         }
     }
 
-    getProgress(name): number {
+    public getProgress(name: string): number {
         var am = this._updates[name];
         return am.getProgress();
     }
@@ -61,16 +70,18 @@ export default class HotUpdateManager {
     /**
      * 初始化更新模块名
      * @param name(string)                 模块名
-     * @param onCheckComplete(function)    检查版本完成
-     * @param onComplete(function)         模块名
-     * @param onProgress(function)         更新完成
-     * @param onNewVersion(function)       已是最新版本
+     * @param onCheckComplete(function)    检查版本完成回调
+     * @param onComplete(function)         更新完成回调
+     * @param onProgress(function)         更新进度回调
+     * @param onNewVersion(function)       已是最新版本回调
      */
-    init(name, onCheckComplete, onComplete, onProgress, onNewVersion) {
+    public init(name, onCheckComplete, onComplete, onProgress, onNewVersion) {
         HotUpdateConfig.concurrent = 2;
 
         var am = new AssetsManager();
         am.name = name;
+        am.onCheckComplete = onCheckComplete;
+        am.onComplete = onComplete;
         am.on(AssetEvent.NEW_VERSION, onNewVersion);
         am.on(AssetEvent.PROGRESS, onProgress);
         am.on(AssetEvent.FAILD, this._onFailed.bind(this));
@@ -79,14 +90,14 @@ export default class HotUpdateManager {
         am.on(AssetEvent.REMOTE_VERSION_MANIFEST_LOAD_FAILD, this._onNetError.bind(this));
         am.on(AssetEvent.REMOTE_PROJECT_MANIFEST_LOAD_FAILD, this._onNetError.bind(this));
         am.on(AssetEvent.NO_NETWORK, this._onNetError.bind(this));
-        am.onCheckComplete = onCheckComplete;
-        am.onComplete = onComplete;
 
         this._updates[name] = am;
     }
 
-    /** 是否没完成 */
-    isNoComplete(name) {
+    /**
+     *  是否没完成
+     **/
+    public isNoComplete(name) {
         if (this._noComplete[name] == null)
             return false;
 
@@ -96,36 +107,44 @@ export default class HotUpdateManager {
     /**
      * 检查版本是否需要更新
      */
-    check(name) {
-        var am = this._updates[name];
+    public check(name): void {
+        var am: AssetsManager = this._updates[name];
         am.check(name);
     }
 
-    /** 断网后恢复状态 */
-    recovery(name) {
+    /**
+     *  断网后恢复状态
+     **/
+    public recovery(name): void {
         if (this._current && this._isUpdating == false) {
             this._isUpdating = true;
             this._current.recovery();
         }
     }
 
-    _onFailed(event) {
+    private _onFailed(event): void {
         this._isUpdating = false;
-        event.target.check(event.target.name);
+        var am: AssetsManager = event.target;
+        am.check(am.name);
     }
 
-    _onNetError(event) {
+    private _onNetError(event): void {
         this._isUpdating = false;
     }
 
-    /** 检查版本完成 */
-    _onCheckComplete(event) {
+    /**
+     *  检查版本完成
+     **/
+    private _onCheckComplete(event) {
         this._queue.push(event.target);
 
         // 保存下在下载的模块状态
         this._saveNoCompleteModule();
 
-        if (event.target.onCheckComplete) event.target.onCheckComplete();
+        var am: AssetsManager = event.target;
+
+        if (am.onCheckComplete)
+            am.onCheckComplete();
 
         if (this._isUpdating == false) {
             this._isUpdating = true;
@@ -134,8 +153,10 @@ export default class HotUpdateManager {
         }
     }
 
-    _onUpdateComplete(event) {
-        if (event.target.onComplete) event.target.onComplete();
+    private _onUpdateComplete(event) {
+        var am: AssetsManager = event.target;
+        if (am.onComplete)
+            am.onComplete();
 
         // 删除当前完成的更新对象
         this._queue.shift();
@@ -152,12 +173,14 @@ export default class HotUpdateManager {
         }
     }
 
-    // 保存下在下载的模块状态
-    _saveNoCompleteModule() {
+    /**
+     *  保存下在下载的模块状态
+     **/
+    private _saveNoCompleteModule() {
         var names = [];
         for (var i = 0; i < this._queue.length; i++) {
             names.push(this._queue[i].name);
         }
-        cc.sys.localStorage.setItem("update_no_complete", JSON.stringify(names));
+        LocalStorageUtils.setItem(HotUpdateManager.ASSET_UPDATE_NO_COMPLETE, JSON.stringify(names));
     }
 }

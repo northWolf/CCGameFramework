@@ -175,7 +175,7 @@ export default class AssetsDownload {
     }
 
     /** 下载失败的资源 */
-    _downloadFailedAssets() {
+    private _downloadFailedAssets() {
         // 下载失败的文件数量重置
         this._downloadFailed = 0;
         this._downloadUnits = this._failedUnits;
@@ -188,7 +188,7 @@ export default class AssetsDownload {
     }
 
     /** 判断是否全部更新完成 */
-    _isUpdateCompleted() {
+    private _isUpdateCompleted() {
         var handleCount = this._downloadComplete + this._downloadFailed;                    // 处理完成数量
 
         if (this._totalUnits == this._downloadComplete) {                                   // 全下载完成
@@ -222,8 +222,10 @@ export default class AssetsDownload {
         }
     }
 
-    /** 删除本地比服务器多出的文件 */
-    _deleteAssets() {
+    /**
+     *  删除本地比服务器多出的文件
+     **/
+    private _deleteAssets() {
         for (var i = 0; i < this._deleteUnits.length; i++) {
             var relativePath = this._deleteUnits[i];
             // @ts-ignore
@@ -237,8 +239,10 @@ export default class AssetsDownload {
         }
     }
 
-    /** 文件保存到本地 */
-    _saveAsset(relativePath, asset) {
+    /**
+     *  文件保存到本地
+     **/
+    private _saveAsset(relativePath, asset) {
         if (cc.sys.isNative) {
             // @ts-ignore
             var storeDirectory = cc.path.join(this._storagePath, relativePath.substr(0, relativePath.lastIndexOf("/")));
@@ -255,7 +259,9 @@ export default class AssetsDownload {
         }
     }
 
-    /** 规避 HTTP 缓存问题 */
+    /**
+     *  规避 HTTP 缓存问题
+     **/
     private _noCache(url: string): string {
         return url + "?t=" + this._nocache;
     }
