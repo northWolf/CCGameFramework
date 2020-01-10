@@ -1,6 +1,6 @@
 import CSPacketHead from "../../game_framework/net/socket/packet/CSPacketHead";
 
-export default class BruceCSPacketHead extends CSPacketHead {
+export default class DefaultCSPacketHead extends CSPacketHead {
 
 	public m_PacketHeadSize:number;
 	public m_PacketSize: number;

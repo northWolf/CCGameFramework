@@ -1,6 +1,6 @@
 import SCPacketHead from "../../game_framework/net/socket/packet/SCPacketHead";
 
-export default class BruceSCPacketHead extends SCPacketHead {
+export default class DefaultSCPacketHead extends SCPacketHead {
 
 	public m_PacketHeadSize:number;
 	public m_PacketSize: number;

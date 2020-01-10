@@ -2,8 +2,8 @@ import App from "../../game_framework/App";
 import SCPacket from "../../game_framework/net/socket/packet/SCPacket";
 import Log from "../../game_framework/utils/Log";
 import ByteArrayMsg from "../../game_framework/net/socket/ByteArrayMsg";
-import BruceSCPacket from "./BruceSCPacket";
-import BruceCSPacket from "./BruceCSPacket";
+import DefaultSCPacket from "./DefaultSCPacket";
+import DefaultCSPacket from "./DefaultCSPacket";
 import ByteArray from "../../game_framework/egret/core/utils/ByteArray";
 
 export default class ByteArrayMsgByProtobuf extends ByteArrayMsg {
@@ -20,7 +20,7 @@ export default class ByteArrayMsgByProtobuf extends ByteArrayMsg {
      * @param msg
      */
     public receive(netChannelName: string, packet: SCPacket): void {
-        var obj: BruceSCPacket = packet as BruceSCPacket;
+        var obj: DefaultSCPacket = packet as DefaultSCPacket;
         if (obj) {
             var eventMsg: string = netChannelName + obj.PacketHead.m_ProtocolID;
             if (obj.PacketBody) {
@@ -40,8 +40,8 @@ export default class ByteArrayMsgByProtobuf extends ByteArrayMsg {
      * 消息解析
      * @param msg
      */
-    public decode(msg: ByteArray): BruceSCPacket {
-        var packet: BruceSCPacket = new BruceSCPacket();
+    public decode(msg: ByteArray): DefaultSCPacket {
+        var packet: DefaultSCPacket = new DefaultSCPacket();
         msg.endian = "littleEndian";
         var packetLength = 0;
         packet.PacketHead.m_PacketSize = msg.readUnsignedInt();
@@ -70,7 +70,7 @@ export default class ByteArrayMsgByProtobuf extends ByteArrayMsg {
      * 消息封装
      * @param msg
      */
-    public encode(msg: BruceCSPacket): ByteArray {
+    public encode(msg: DefaultCSPacket): ByteArray {
         let sendMsg: ByteArray = new ByteArray();
         if (msg.PacketBody) {
             App.DebugUtils.start("Protobuf Encode start");
@@ -97,7 +97,7 @@ export default class ByteArrayMsgByProtobuf extends ByteArrayMsg {
     /** 获取数据包中的协议Id
      * @param packet 数据包
      */
-    public getProtocolId(packet: BruceCSPacket): string {
+    public getProtocolId(packet: DefaultCSPacket): string {
         return packet.PacketHead.m_ProtocolID.toString();
     }
 

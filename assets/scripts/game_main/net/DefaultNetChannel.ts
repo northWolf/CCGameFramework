@@ -1,4 +1,4 @@
-export enum BruceNetChannel {
+export enum DefaultNetChannel {
 	NetChannel_Hall,
 	NetChannel_Room,
 }
