@@ -5,7 +5,7 @@
   "author": "Cocos Creator",
   "main": "main.js",
   "main-menu": {
-    "Packages/Hello World": {
+    "自定义工具/Hello World Package": {
       "message": "hello-world-package:say-hello"
     }
   },

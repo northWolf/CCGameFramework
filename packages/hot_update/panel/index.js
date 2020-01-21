@@ -5,8 +5,11 @@ var fs = require('fs');
 var path = require('path');
 var crypto = require('crypto');
 
-require(path.join(Editor.Project.path, 'packages/hot_update/panel/copy.js'));
-require(path.join(Editor.Project.path, 'packages/common/editor_utils.js'));
+window.packageRoot = "packages://hot_update";
+
+const copy = Editor.require(window.packageRoot + "/core/copy.js"),
+    FileUtil = Editor.require(window.packageRoot + "/core/FileUtil.js");
+
 
 // 版本配置
 var config = {};
@@ -42,7 +45,7 @@ var VersionInitial = function (moduleName, version, mPaths) {
             this.traversal(path.join(args.releasePath, 'src'), data.assets);
 
         var projectManifest = path.join(args.projectVersionInargsPath, projectName);
-        createDirectory(args.projectVersionInargsPath);
+        FileUtil.createDirectory(args.projectVersionInargsPath);
 
         var releaseManifest = path.join(args.releaseVersionInargsPath, projectName);
 
@@ -120,9 +123,6 @@ function releaseVersionInitial() {
         var vi = new VersionInitial(mPaths[i], mVersions[i], mPaths);
         vi.process();
     }
-
-    // 发布ＣＤＮ版本更新资源
-    releaseVersionCdn();
 }
 
 /*----------------------------------------------------------------------------------------------------*/
@@ -273,10 +273,13 @@ function releaseVersionCdn() {
 /*----------------------------------------------------------------------------------------------------*/
 
 Editor.Panel.extend({
+    // style: fs.readFileSync(Editor.url(window.packageRoot + "/panel/index.css", "utf8")) + "",
+    // template: fs.readFileSync(Editor.url(window.packageRoot + "/panel/index.html", "utf8")) + "",
     ready() {
         readProjectModuleVersionInfo();
         readProjectBuilderInfo();
         releaseVersionInitial();
+        releaseVersionCdn();
     },
 });
 
@@ -297,6 +300,6 @@ function readProjectBuilderInfo() {
 
     var realPath = path.join(args.releaseCdnPath);
     Editor.log("【资源打包】发布资源文件路径 " + realPath);
-    createDirectory(realPath);
+    FileUtil.createDirectory(realPath);
 }
 
