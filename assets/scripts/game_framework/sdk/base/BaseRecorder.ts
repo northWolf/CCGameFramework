@@ -7,7 +7,7 @@ export enum ItemState {
     GOT
 }
 
-export default class BaseRecorder extends BaseModel {
+export default abstract class BaseRecorder extends BaseModel {
     protected recorder: any;
 
     protected videoPath: string = null;

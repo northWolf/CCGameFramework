@@ -9,8 +9,7 @@ import BaseShare from "./BaseShare";
 import {LoginCallback, ShareCallback} from "../ChannelID";
 
 
-export default class BaseChannel {
-
+export default abstract class BaseChannel {
 
     protected id: number;
 
