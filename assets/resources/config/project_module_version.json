@@ -1,7 +1,7 @@
 {
 	"isUpdateVersion": true,
 	"line": "line1",
-	"server": "http://172.18.254.56:8080/update/",
+	"server": "http://127.0.0.1:80/update/",
 	"modules": {
 		"inbuilt": {
 			"initial": "1.0.0.0001",
