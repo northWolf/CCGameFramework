@@ -375,11 +375,12 @@ declare namespace fgui {
         protected onDisable(): void;
         protected onUpdate(): void;
         protected onDestroy(): void;
-        onClick(listener: Function, target: any): void;
-        offClick(listener: Function, target: any): void;
+        onClick(listener: Function, target?: any): void;
+        offClick(listener: Function, target?: any): void;
+        clearClick(): void;
         hasClickListener(): boolean;
-        on(type: string, listener: Function, target: any): void;
-        off(type: string, listener: Function, target: any): void;
+        on(type: string, listener: Function, target?: any): void;
+        off(type: string, listener?: Function, target?: any): void;
         draggable: boolean;
         dragBounds: cc.Rect;
         startDrag(touchId?: number): void;
@@ -1653,6 +1654,7 @@ declare namespace fgui {
 }
 declare namespace fgui {
     class UIObjectFactory {
+        static counter: number;
         static extensions: any;
         private static loaderType;
         constructor();
@@ -1660,7 +1662,7 @@ declare namespace fgui {
         static setExtension(url: string, type: any): void;
         static setLoaderExtension(type: any): void;
         static resolveExtension(pi: PackageItem): void;
-        static newObject(pi: PackageItem): GObject;
+        static newObject(pi: PackageItem, userClass?: any): GObject;
         static newObject2(type: ObjectType): GObject;
     }
 }
@@ -1830,6 +1832,7 @@ declare namespace fgui {
         private _graySpriteMaterial;
         private _spriteMaterial;
         constructor();
+        protected onLoad(): void;
         flip: FlipType;
         fillMethod: FillMethod;
         fillOrigin: FillOrigin;

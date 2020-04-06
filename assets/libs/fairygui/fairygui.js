@@ -162,7 +162,6 @@ window.__extends = (this && this.__extends) || (function () {
                 di = this._itemList[this._index];
                 if (di.packageItem != null) {
                     obj = fgui.UIObjectFactory.newObject(di.packageItem);
-                    obj.packageItem = di.packageItem;
                     this._objectPool.push(obj);
                     fgui.UIPackage._constructing++;
                     if (di.packageItem.type == fgui.PackageItemType.Component) {
@@ -1225,7 +1224,7 @@ window.__extends = (this && this.__extends) || (function () {
         });
         Object.defineProperty(GObject.prototype, "onStage", {
             get: function () {
-                return this._node.activeInHierarchy;
+                return this._node && this._node.activeInHierarchy;
             },
             enumerable: true,
             configurable: true
@@ -1552,6 +1551,9 @@ window.__extends = (this && this.__extends) || (function () {
         };
         GObject.prototype.offClick = function (listener, target) {
             this._node.off(fgui.Event.CLICK, listener, target);
+        };
+        GObject.prototype.clearClick = function () {
+            this._node.off(fgui.Event.CLICK);
         };
         GObject.prototype.hasClickListener = function () {
             return this._node.hasEventListener(fgui.Event.CLICK);
@@ -2870,9 +2872,10 @@ window.__extends = (this && this.__extends) || (function () {
             this.constructFromResource2(null, 0);
         };
         GComponent.prototype.constructFromResource2 = function (objectPool, poolIndex) {
-            if (!this.packageItem.decoded) {
-                this.packageItem.decoded = true;
-                fgui.TranslationHelper.translateComponent(this.packageItem);
+            var contentItem = this.packageItem.getBranch();
+            if (!contentItem.decoded) {
+                contentItem.decoded = true;
+                fgui.TranslationHelper.translateComponent(contentItem);
             }
             var i;
             var dataLen;
@@ -2882,7 +2885,7 @@ window.__extends = (this && this.__extends) || (function () {
             var f2;
             var i1;
             var i2;
-            var buffer = this.packageItem.rawData;
+            var buffer = contentItem.rawData;
             buffer.seek(0, 0);
             this._underConstruct = true;
             this.sourceWidth = buffer.readInt();
@@ -2949,12 +2952,11 @@ window.__extends = (this && this.__extends) || (function () {
                         if (pkgId != null)
                             pkg = fgui.UIPackage.getById(pkgId);
                         else
-                            pkg = this.packageItem.owner;
+                            pkg = contentItem.owner;
                         pi = pkg != null ? pkg.getItemById(src) : null;
                     }
                     if (pi != null) {
                         child = fgui.UIObjectFactory.newObject(pi);
-                        child.packageItem = pi;
                         child.constructFromResource();
                     }
                     else
@@ -2999,7 +3001,7 @@ window.__extends = (this && this.__extends) || (function () {
             i1 = buffer.readInt();
             i2 = buffer.readInt();
             if (hitTestId != null) {
-                pi = this.packageItem.owner.getItemById(hitTestId);
+                pi = contentItem.owner.getItemById(hitTestId);
                 if (pi && pi.hitTestData)
                     this.hitArea = new fgui.PixelHitTest(pi.hitTestData, i1, i2);
             }
@@ -3021,7 +3023,7 @@ window.__extends = (this && this.__extends) || (function () {
             this._underConstruct = false;
             this.buildNativeDisplayList();
             this.setBoundsChangedFlag();
-            if (this.packageItem.objectType != fgui.ObjectType.Component)
+            if (contentItem.objectType != fgui.ObjectType.Component)
                 this.constructExtension(buffer);
             this.onConstruct();
         };
@@ -3738,7 +3740,7 @@ window.__extends = (this && this.__extends) || (function () {
                 if (this._selectedIndex == val)
                     return;
                 this._selectedIndex = val;
-                if (this.selectedIndex >= 0 && this.selectedIndex < this._items.length) {
+                if (this._selectedIndex >= 0 && this._selectedIndex < this._items.length) {
                     this.text = this._items[this._selectedIndex];
                     if (this._icons != null && this._selectedIndex < this._icons.length)
                         this.icon = this._icons[this._selectedIndex];
@@ -3978,16 +3980,8 @@ window.__extends = (this && this.__extends) || (function () {
         GComboBox.prototype.onClickItem2 = function (index) {
             if (this.dropdown.parent instanceof fgui.GRoot)
                 this.dropdown.parent.hidePopup();
-            this._selectedIndex = index;
-            if (this._selectedIndex >= 0) {
-                this.text = this._items[this._selectedIndex];
-                this.icon = (this._icons != null && this._selectedIndex < this._icons.length) ? this._icons[this._selectedIndex] : null;
-            }
-            else {
-                this.text = "";
-                if (this._icons != null)
-                    this.icon = null;
-            }
+            this._selectedIndex = -1;
+            this.selectedIndex = index;
             this._node.emit(fgui.Event.STATUS_CHANGED, this);
         };
         GComboBox.prototype.onRollOver_1 = function () {
@@ -4066,7 +4060,7 @@ window.__extends = (this && this.__extends) || (function () {
         GGraph.prototype.drawRegularPolygon = function (lineSize, lineColor, fillColor, sides, startAngle, distances) {
             if (startAngle === void 0) { startAngle = 0; }
             if (distances === void 0) { distances = null; }
-            this._type = 3;
+            this._type = 4;
             this._lineSize = lineSize;
             this._lineColor = lineColor;
             this._fillColor = fillColor;
@@ -4076,7 +4070,7 @@ window.__extends = (this && this.__extends) || (function () {
             this.updateGraph();
         };
         GGraph.prototype.drawPolygon = function (lineSize, lineColor, fillColor, points) {
-            this._type = 4;
+            this._type = 3;
             this._lineSize = lineSize;
             this._lineColor = lineColor;
             this._fillColor = fillColor;
@@ -7381,12 +7375,14 @@ window.__extends = (this && this.__extends) || (function () {
                     }
                     else {
                         this._content.spriteFrame = this._contentItem.asset;
-                        if (this._contentItem.scale9Grid)
-                            this._content.type = cc.Sprite.Type.SLICED;
-                        else if (this._contentItem.scaleByTile)
-                            this._content.type = cc.Sprite.Type.TILED;
-                        else
-                            this._content.type = cc.Sprite.Type.SIMPLE;
+                        if (this._content.fillMethod == 0) {
+                            if (this._contentItem.scale9Grid)
+                                this._content.type = cc.Sprite.Type.SLICED;
+                            else if (this._contentItem.scaleByTile)
+                                this._content.type = cc.Sprite.Type.TILED;
+                            else
+                                this._content.type = cc.Sprite.Type.SIMPLE;
+                        }
                         this.updateLayout();
                     }
                 }
@@ -7492,7 +7488,7 @@ window.__extends = (this && this.__extends) || (function () {
                 this._container.setContentSize(this._width, this._height);
                 this._container.setPosition(pivotCorrectX, pivotCorrectY);
                 if (this._content2 != null) {
-                    this._content2.setPosition(pivotCorrectX - this._width / 2, pivotCorrectY - this._height / 2);
+                    this._content2.setPosition(pivotCorrectX + this._width * this.pivotX, pivotCorrectY - this._height * this.pivotY);
                     this._content2.setScale(1, 1);
                 }
                 if (this._contentWidth == this._width && this._contentHeight == this._height)
@@ -7531,7 +7527,7 @@ window.__extends = (this && this.__extends) || (function () {
             }
             this._container.setContentSize(this._contentWidth, this._contentHeight);
             if (this._content2 != null) {
-                this._content2.setPosition(pivotCorrectX - this._width / 2, pivotCorrectY - this._height / 2);
+                this._content2.setPosition(pivotCorrectX + this._width * this.pivotX, pivotCorrectY - this._height * this.pivotY);
                 this._content2.setScale(sx, sy);
             }
             var nx, ny;
@@ -9554,7 +9550,7 @@ window.__extends = (this && this.__extends) || (function () {
             configurable: true
         });
         GTextInput.prototype.requestFocus = function () {
-            this._editBox.setFocus();
+            this._editBox.focus();
         };
         GTextInput.prototype.markSizeChanged = function () {
         };
@@ -12055,7 +12051,9 @@ window.__extends = (this && this.__extends) || (function () {
                 return;
             if (!this._touchEffect)
                 return;
-            if (ScrollPane.draggingPane != null && ScrollPane.draggingPane != this || fgui.GObject.draggingObject != null)
+            if (fgui.GObject.draggingObject != null && fgui.GObject.draggingObject.onStage)
+                return;
+            if (ScrollPane.draggingPane != null && ScrollPane.draggingPane != this && ScrollPane.draggingPane._owner.onStage)
                 return;
             var pt = this._owner.globalToLocal(evt.pos.x, evt.pos.y, ScrollPane.sHelperPoint);
             var sensitivity = fgui.UIConfig.touchScrollSensitivity;
@@ -13913,6 +13911,8 @@ window.__extends = (this && this.__extends) || (function () {
                                     buffer.skip(2);
                                 if ((value = compStrings[elementId + "-" + j + "-0"]) != null)
                                     buffer.writeS(value);
+                                else
+                                    buffer.skip(2);
                                 if (buffer.version >= 2) {
                                     buffer.skip(6);
                                     buffer.skip(buffer.readUshort() * 4);
@@ -14058,13 +14058,24 @@ window.__extends = (this && this.__extends) || (function () {
             if (!pi.extensionType)
                 pi.extensionType = UIObjectFactory.extensions["ui://" + pi.owner.name + "/" + pi.name];
         };
-        UIObjectFactory.newObject = function (pi) {
-            if (pi.extensionType != null)
-                return new pi.extensionType();
+        UIObjectFactory.newObject = function (pi, userClass) {
+            var obj;
+            if (pi.type == fgui.PackageItemType.Component) {
+                if (userClass)
+                    obj = new userClass();
+                else if (pi.extensionType)
+                    obj = new pi.extensionType();
+                else
+                    obj = UIObjectFactory.newObject2(pi.objectType);
+            }
             else
-                return this.newObject2(pi.objectType);
+                obj = UIObjectFactory.newObject2(pi.objectType);
+            if (obj)
+                obj.packageItem = pi;
+            return obj;
         };
         UIObjectFactory.newObject2 = function (type) {
+            UIObjectFactory.counter++;
             switch (type) {
                 case fgui.ObjectType.Image:
                     return new fgui.GImage();
@@ -14107,6 +14118,7 @@ window.__extends = (this && this.__extends) || (function () {
                     return null;
             }
         };
+        UIObjectFactory.counter = 0;
         UIObjectFactory.extensions = {};
         return UIObjectFactory;
     }());
@@ -14207,7 +14219,6 @@ window.__extends = (this && this.__extends) || (function () {
             delete UIPackage._instByName[pkg.name];
         };
         UIPackage.createObject = function (pkgName, resName, userClass) {
-            if (userClass === void 0) { userClass = null; }
             var pkg = UIPackage.getByName(pkgName);
             if (pkg)
                 return pkg.createObject(resName, userClass);
@@ -14215,7 +14226,6 @@ window.__extends = (this && this.__extends) || (function () {
                 return null;
         };
         UIPackage.createObjectFromURL = function (url, userClass) {
-            if (userClass === void 0) { userClass = null; }
             var pi = UIPackage.getItemByURL(url);
             if (pi)
                 return pi.owner.internalCreateObject(pi, userClass);
@@ -14471,7 +14481,6 @@ window.__extends = (this && this.__extends) || (function () {
             configurable: true
         });
         UIPackage.prototype.createObject = function (resName, userClass) {
-            if (userClass === void 0) { userClass = null; }
             var pi = this._itemsByName[resName];
             if (pi)
                 return this.internalCreateObject(pi, userClass);
@@ -14479,20 +14488,10 @@ window.__extends = (this && this.__extends) || (function () {
                 return null;
         };
         UIPackage.prototype.internalCreateObject = function (item, userClass) {
-            if (userClass === void 0) { userClass = null; }
-            var g;
-            if (item.type == fgui.PackageItemType.Component) {
-                if (userClass != null)
-                    g = new userClass();
-                else
-                    g = fgui.UIObjectFactory.newObject(item);
-            }
-            else
-                g = fgui.UIObjectFactory.newObject(item);
+            var g = fgui.UIObjectFactory.newObject(item, userClass);
             if (g == null)
                 return null;
             UIPackage._constructing++;
-            g.packageItem = item;
             g.constructFromResource();
             UIPackage._constructing--;
             return g;
@@ -14657,7 +14656,6 @@ window.__extends = (this && this.__extends) || (function () {
                     bg.channel = 2;
                 else if (bg.channel == 3)
                     bg.channel = 1;
-                bg.rotated = true;
                 if (ttf) {
                     rect.x += mainSprite.rect.x;
                     rect.y += mainSprite.rect.y;
@@ -14675,8 +14673,6 @@ window.__extends = (this && this.__extends) || (function () {
                             mainTexture = sprite.atlas.asset;
                         }
                     }
-                }
-                if (!ttf) {
                     if (bg.xAdvance == 0) {
                         if (xadvance == 0)
                             bg.xAdvance = bg.xOffset + bg.rect.width;
@@ -15163,10 +15159,12 @@ window.__extends = (this && this.__extends) || (function () {
             _this._fillAmount = 0;
             _this._fillClockwise = false;
             _this._grayed = false;
-            _this.sizeMode = cc.Sprite.SizeMode.CUSTOM;
-            _this.trim = false;
             return _this;
         }
+        Image.prototype.onLoad = function () {
+            this.sizeMode = cc.Sprite.SizeMode.CUSTOM;
+            this.trim = false;
+        };
         Object.defineProperty(Image.prototype, "flip", {
             get: function () {
                 return this._flip;
