@@ -259,13 +259,13 @@ function releaseVersionCdn() {
     deleteFolderRecursive(path.resolve(args.releaseCdnPath + "res"))
 
     copyDir(path.resolve(args.releasePath + "src"), path.resolve(args.releaseCdnPath + "src"), function (err) {
-        if (err) Editor.log("【资源打包】发布到ＣＮＤ的 src 目录出错");
-        else Editor.log("【资源打包】发布到ＣＮＤ的 src 目录完成")
+        if (err) Editor.log("【资源打包】发布到 CDN 的 src 目录出错");
+        else Editor.log("【资源打包】发布到 CDN 的 src 目录完成")
     });
 
     copyDir(path.resolve(args.releasePath + "res"), path.resolve(args.releaseCdnPath + "res"), function (err) {
-        if (err) Editor.log("【资源打包】发布到ＣＮＤ的 res 目录出错");
-        else Editor.log("【资源打包】发布到ＣＮＤ的 res 目录完成");
+        if (err) Editor.log("【资源打包】发布到 CDN 的 res 目录出错");
+        else Editor.log("【资源打包】发布到 CDN 的 res 目录完成");
     });
 }
 
