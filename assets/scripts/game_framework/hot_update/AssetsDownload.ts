@@ -16,9 +16,9 @@ export default class AssetsDownload {
     private _failedUnits: string[]; // 下载失败文件对象集合
     private _deleteUnits: string[]; // 需要删除文件对象集合
 
-    private _downloadComplete: number;// 下载完成的文件数量
-    private _downloadFailed: number; // 下载失败的文件数量
-    private _failCount: number;// 下载失败的次数
+    private _downloadCompleteNum: number;// 下载完成的文件数量
+    private _downloadFailedNum: number; // 下载失败的文件数量
+    private _failedCount: number;// 下载失败的次数
     private _concurrentCurrent: number;  // 并发数量当前值
 
     private _totalUnits: number; // 当前总更新单位数量 = 更新完成文件数量 + 待更新文件数量
@@ -27,7 +27,7 @@ export default class AssetsDownload {
 
     public onComplete;
     public onProgress;
-    public onFaild;
+    public onFail;
     public onNoNetwork;
 
     /**
@@ -45,16 +45,16 @@ export default class AssetsDownload {
         this._failedUnits = [];
         this._deleteUnits = [];
 
-        this._downloadComplete = 0;
-        this._downloadFailed = 0;
-        this._failCount = 0;
+        this._downloadCompleteNum = 0;
+        this._downloadFailedNum = 0;
+        this._failedCount = 0;
         this._concurrentCurrent = 0;
 
         this._analysisDownloadUnits();
         this._analysisDeleteUnits();
 
 
-        this._totalUnits = this._downloadComplete + this._downloadUnits.length;
+        this._totalUnits = this._downloadCompleteNum + this._downloadUnits.length;
 
         Log.info(App.StringUtils.Format("【更新】共有{0}个文件需要更新", this._downloadUnits.length.toString()));
         Log.info(App.StringUtils.Format("【更新】共有{0}个文件需要删除", this._deleteUnits.length.toString()));
@@ -107,7 +107,7 @@ export default class AssetsDownload {
         if (this._remoteManifest.assets[key]["state"] != true) {
             this._downloadUnits.push(key);
         } else {
-            this._downloadComplete++;
+            this._downloadCompleteNum++;
         }
     }
 
@@ -134,17 +134,17 @@ export default class AssetsDownload {
             this._completeUnits.push(relativePath);
 
             // 下载完成的文件数量加 1
-            this._downloadComplete++;
+            this._downloadCompleteNum++;
 
             if (HotUpdateConfig.debugProgress)
-                Log.info(App.StringUtils.Format("【更新】进度 {0}/{1}，当前有 {2} 个资源并行下载", this._downloadComplete, this._totalUnits, this._concurrentCurrent));
+                Log.info(App.StringUtils.Format("【更新】进度 {0}/{1}，当前有 {2} 个资源并行下载", this._downloadCompleteNum, this._totalUnits, this._concurrentCurrent));
 
             // 还原并发数量
             this._concurrentCurrent--;
 
             // 更新进度事件
             if (this.onProgress) {
-                this.onProgress(relativePath, this._downloadComplete / this._totalUnits);
+                this.onProgress(relativePath, this._downloadCompleteNum / this._totalUnits);
             }
 
             // 判断是否下载完成
@@ -155,11 +155,11 @@ export default class AssetsDownload {
         var error = function (error) {
             this._failedUnits.push(relativePath);
             this._concurrentCurrent--;
-            this._downloadFailed++;
+            this._downloadFailedNum++;
 
 
             Log.info(App.StringUtils.Format("【更新】下载远程路径为 {0} 的文件失败，错误码为 {1}", url, error));
-            Log.info(App.StringUtils.Format("【更新】进度 {0}/{1}, 总处理文件数据为 {2}", this._downloadComplete, this._totalUnits, this._downloadComplete + this._downloadFailed));
+            Log.info(App.StringUtils.Format("【更新】进度 {0}/{1}, 总处理文件数据为 {2}", this._downloadCompleteNum, this._totalUnits, this._downloadCompleteNum + this._downloadFailedNum));
 
             this._isUpdateCompleted();
 
@@ -177,7 +177,7 @@ export default class AssetsDownload {
     /** 下载失败的资源 */
     private _downloadFailedAssets() {
         // 下载失败的文件数量重置
-        this._downloadFailed = 0;
+        this._downloadFailedNum = 0;
         this._downloadUnits = this._failedUnits;
         this._failedUnits = [];
         this._items = this._downloadUnits.slice(0);
@@ -189,9 +189,9 @@ export default class AssetsDownload {
 
     /** 判断是否全部更新完成 */
     private _isUpdateCompleted() {
-        var handleCount = this._downloadComplete + this._downloadFailed;                    // 处理完成数量
+        var handleCount = this._downloadCompleteNum + this._downloadFailedNum;                    // 处理完成数量
 
-        if (this._totalUnits == this._downloadComplete) {                                   // 全下载完成
+        if (this._totalUnits == this._downloadCompleteNum) {                                   // 全下载完成
             Log.info("【更新】更新完成");
 
             // 触发热更完成事件
@@ -201,21 +201,21 @@ export default class AssetsDownload {
             this._deleteAssets();
         } else if (this._totalUnits == handleCount) {                                         // 全处理完成，有下载失败的文件，需要重试
             Log.info("【更新】下载文件总数量　　：", this._totalUnits);
-            Log.info("【更新】下载成功的文件数量：", this._downloadComplete);
-            Log.info("【更新】下载失败的文件数量：", this._downloadFailed);
+            Log.info("【更新】下载成功的文件数量：", this._downloadCompleteNum);
+            Log.info("【更新】下载失败的文件数量：", this._downloadFailedNum);
 
             // 更新失败的次数加 1
-            this._failCount++;
+            this._failedCount++;
 
-            if (this._failCount < 3) {
-                Log.info(App.StringUtils.Format("【更新】更新重试第 {0} 次", this._failCount.toString()));
+            if (this._failedCount < 3) {
+                Log.info(App.StringUtils.Format("【更新】更新重试第 {0} 次", this._failedCount.toString()));
 
                 this._downloadFailedAssets();
             } else {
                 Log.info("【更新】更新失败");
 
                 // 触发热更失败事件
-                if (this.onFaild) this.onFaild();
+                if (this.onFail) this.onFail();
             }
         } else if (this._items.length > 0 && this._concurrentCurrent < HotUpdateConfig.concurrent) {      // 队列下载
             this._downloadAsset();

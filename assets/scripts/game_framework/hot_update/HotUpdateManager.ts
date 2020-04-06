@@ -2,8 +2,9 @@ import AssetsManager, {AssetEvent} from "./AssetsManager";
 import HotUpdateConfig from "./HotUpdateConfig";
 import App from "../App";
 import LocalStorageUtils from "../utils/LocalStorageUtils";
+import BaseClass from "../base/BaseClass";
 
-export default class HotUpdateManager {
+export default class HotUpdateManager extends BaseClass{
     public static readonly ASSET_UPDATE_NO_COMPLETE = "update_no_complete";
 
     private _updates = {};            // 模块更新管理器集合
@@ -15,6 +16,8 @@ export default class HotUpdateManager {
     private assetManager: AssetsManager;
 
     constructor() {
+        super();
+
         this._updates = {};
         this._queue = [];
         this._isUpdating = false;
@@ -84,7 +87,7 @@ export default class HotUpdateManager {
         am.onComplete = onComplete;
         am.on(AssetEvent.NEW_VERSION, onNewVersion);
         am.on(AssetEvent.PROGRESS, onProgress);
-        am.on(AssetEvent.FAILD, this._onFailed.bind(this));
+        am.on(AssetEvent.FAILED, this._onFailed.bind(this));
         am.on(AssetEvent.NEW_VERSION_FOUND, this._onCheckComplete.bind(this));
         am.on(AssetEvent.SUCCESS, this._onUpdateComplete.bind(this));
         am.on(AssetEvent.REMOTE_VERSION_MANIFEST_LOAD_FAILD, this._onNetError.bind(this));

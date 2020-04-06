@@ -21,6 +21,7 @@ import PathUtils from "./utils/PathUtils";
 import SoundManager from "./sound/SoundManager";
 import TimerManager from "./utils/TimerManager";
 import StringUtils from "./utils/StringUtils";
+import HotUpdateManager from "./hot_update/HotUpdateManager";
 
 export default class App {
 
@@ -200,6 +201,10 @@ export default class App {
      */
     public static get StringUtils(): StringUtils {
         return StringUtils.getInstance();
+    }
+
+    public static get HotUpdateManager():HotUpdateManager{
+        return HotUpdateManager.getInstance();
     }
 
 
