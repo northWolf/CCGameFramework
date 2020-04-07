@@ -1,5 +1,6 @@
 import BaseRewardAd from "../../../game_framework/sdk/base/BaseRewardAd";
 import JsNativeBridge from "../../../game_framework/utils/JsNativeBridge";
+import Log from "../../../game_framework/utils/Log";
 
 
 export default class GoogleAppVideoAd extends BaseRewardAd {
@@ -19,12 +20,12 @@ export default class GoogleAppVideoAd extends BaseRewardAd {
     }
 
     show(func: Function): void {
-        cc.log('GoogleAppVideoAd ======= show  ')
+        Log.info('GoogleAppVideoAd ======= show  ')
         this.func = func;
         let className = 'org/cocos2dx/javascript/AppActivity'
         let methodName = 'showRewardAd'
         let sign = '(I)V'
-        JsNativeBridge.callStaticMethod(className, methodName, 1, sign)
+        JsNativeBridge.callStaticMethod(className, methodName, 1, sign);
     }
 
     isLoad(): boolean {

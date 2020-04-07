@@ -3,6 +3,7 @@ import Manifest from "./Manifest";
 import HotUpdateConfig from "./HotUpdateConfig";
 import App from "../App";
 import HttpRequest from "./HttpRequest";
+import DeviceUtils from "../utils/DeviceUtils";
 
 export default class AssetsDownload {
     private _storagePath: string;
@@ -243,7 +244,7 @@ export default class AssetsDownload {
      *  文件保存到本地
      **/
     private _saveAsset(relativePath, asset) {
-        if (cc.sys.isNative) {
+        if (App.DeviceUtils.IsNative) {
             // @ts-ignore
             var storeDirectory = cc.path.join(this._storagePath, relativePath.substr(0, relativePath.lastIndexOf("/")));
             // @ts-ignore
