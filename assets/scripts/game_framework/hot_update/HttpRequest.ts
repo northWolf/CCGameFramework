@@ -100,6 +100,10 @@ export default class HttpRequest extends BaseClass {
 
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
+        if (responseType == 'arraybuffer') {
+            xhr.responseType = responseType;
+        }
+
         xhr.onerror = function () {
             delete this.urls[newUrl];
             if (errorCallback == null) return;
@@ -117,7 +121,6 @@ export default class HttpRequest extends BaseClass {
             if (xhr.status == 200) {
                 if (completeCallback) {
                     if (responseType == 'arraybuffer') {
-                        xhr.responseType = responseType;
                         completeCallback(xhr.response);                 // 加载非文本格式
                     } else {
                         completeCallback(xhr.responseText);             // 加载文本格式
