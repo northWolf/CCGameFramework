@@ -117,6 +117,15 @@ export default class LoginView extends BaseFguiView {
             App.HotUpdateManager.check(moduleName);
         },this);
 
+        FairyGUIUtil.GFindChild(this._view,"btn_hotupdate_result").onClick(function(){
+            Log.info("热更新的结果：1");
+        },this);
+
+        FairyGUIUtil.GFindChild(this._view,"btn_restart_game").onClick(function(){
+            Log.info("重启游戏");
+            cc.game.restart();
+        },this);
+
         FairyGUIUtil.GFindChild(this._view,"btn_clear_local_storage").onClick(function(){
             Log.info("清理本地缓存");
            LocalStorageUtils.clearAll();
