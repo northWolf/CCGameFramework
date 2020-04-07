@@ -1,4 +1,4 @@
-import AssetsManager, {AssetEvent} from "./AssetsManager";
+import AssetsDownloadManager, {AssetDownloadEvent} from "./AssetsDownloadManager";
 import HotUpdateConfig from "./HotUpdateConfig";
 import App from "../App";
 import LocalStorageUtils from "../utils/LocalStorageUtils";
@@ -10,10 +10,10 @@ export default class HotUpdateManager extends BaseClass{
     private _updates = {};            // 模块更新管理器集合
     private _queue = [];            // 更新队列
     private _isUpdating: boolean = false;         // 是否正在更新中
-    private _current:AssetsManager = null;          // 当前正在更新的模块
+    private _current:AssetsDownloadManager = null;          // 当前正在更新的模块
     private _noComplete = {};            // 上次未完成的热更项
 
-    private assetManager: AssetsManager;
+    private assetManager: AssetsDownloadManager;
 
     constructor() {
         super();
@@ -24,7 +24,7 @@ export default class HotUpdateManager extends BaseClass{
         this._current = null;
         this._noComplete = {};
 
-        this.assetManager = new AssetsManager();
+        this.assetManager = new AssetsDownloadManager();
     }
 
     /**
@@ -81,18 +81,18 @@ export default class HotUpdateManager extends BaseClass{
     public init(name, onCheckComplete, onComplete, onProgress, onNewVersion) {
         HotUpdateConfig.concurrent = 2;
 
-        var am = new AssetsManager();
+        var am = new AssetsDownloadManager();
         am.name = name;
         am.onCheckComplete = onCheckComplete;
         am.onComplete = onComplete;
-        am.on(AssetEvent.NEW_VERSION, onNewVersion);
-        am.on(AssetEvent.PROGRESS, onProgress);
-        am.on(AssetEvent.FAILED, this._onFailed.bind(this));
-        am.on(AssetEvent.NEW_VERSION_FOUND, this._onCheckComplete.bind(this));
-        am.on(AssetEvent.SUCCESS, this._onUpdateComplete.bind(this));
-        am.on(AssetEvent.REMOTE_VERSION_MANIFEST_LOAD_FAILD, this._onNetError.bind(this));
-        am.on(AssetEvent.REMOTE_PROJECT_MANIFEST_LOAD_FAILD, this._onNetError.bind(this));
-        am.on(AssetEvent.NO_NETWORK, this._onNetError.bind(this));
+        am.on(AssetDownloadEvent.NEW_VERSION, onNewVersion);
+        am.on(AssetDownloadEvent.PROGRESS, onProgress);
+        am.on(AssetDownloadEvent.FAILED, this._onFailed.bind(this));
+        am.on(AssetDownloadEvent.NEW_VERSION_FOUND, this._onCheckComplete.bind(this));
+        am.on(AssetDownloadEvent.SUCCESS, this._onUpdateComplete.bind(this));
+        am.on(AssetDownloadEvent.REMOTE_VERSION_MANIFEST_LOAD_FAILD, this._onNetError.bind(this));
+        am.on(AssetDownloadEvent.REMOTE_PROJECT_MANIFEST_LOAD_FAILD, this._onNetError.bind(this));
+        am.on(AssetDownloadEvent.NO_NETWORK, this._onNetError.bind(this));
 
         this._updates[name] = am;
     }
@@ -111,7 +111,7 @@ export default class HotUpdateManager extends BaseClass{
      * 检查版本是否需要更新
      */
     public check(name): void {
-        var am: AssetsManager = this._updates[name];
+        var am: AssetsDownloadManager = this._updates[name];
         am.check(name);
     }
 
@@ -127,7 +127,7 @@ export default class HotUpdateManager extends BaseClass{
 
     private _onFailed(event): void {
         this._isUpdating = false;
-        var am: AssetsManager = event.target;
+        var am: AssetsDownloadManager = event.target;
         am.check(am.name);
     }
 
@@ -144,7 +144,7 @@ export default class HotUpdateManager extends BaseClass{
         // 保存下在下载的模块状态
         this._saveNoCompleteModule();
 
-        var am: AssetsManager = event.target;
+        var am: AssetsDownloadManager = event.target;
 
         if (am.onCheckComplete)
             am.onCheckComplete();
@@ -157,7 +157,7 @@ export default class HotUpdateManager extends BaseClass{
     }
 
     private _onUpdateComplete(event) {
-        var am: AssetsManager = event.target;
+        var am: AssetsDownloadManager = event.target;
         if (am.onComplete)
             am.onComplete();
 

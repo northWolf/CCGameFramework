@@ -7,7 +7,7 @@ import HttpRequest from "./HttpRequest";
 import LocalStorageUtils from "../utils/LocalStorageUtils";
 import ResourceItem from "../resource/ResourceItem";
 
-export class AssetEvent {
+export class AssetDownloadEvent {
     public static readonly NEW_VERSION: string = "asset_new_version";                           // 已是最新版本
     public static readonly NEW_VERSION_FOUND: string = "asset_new_version_found";                     // 找到新版本
     public static readonly SUCCESS: string = "asset_success";                               // 更新成功
@@ -19,7 +19,7 @@ export class AssetEvent {
     public static readonly NO_NETWORK: string = "asset_no_network";                            // 断网
 }
 
-export default class AssetsManager extends cc.EventTarget {
+export default class AssetsDownloadManager extends cc.EventTarget {
     public static readonly LOCAL_STORAGE_ASSET_FOLDER: string = "local-storage-asset-folder";       // 本地缓存资源目录
     public static readonly LOCAL_STORAGE_KEY_MODULE_PROJECT_MANIFEST: string = "update_project";          // 本地缓存清单数据
     public static readonly LOCAL_STORAGE_KEY_UPDATE_STATE: string = "update_state";            // 本地缓存更新状态数据（每完成一个资源下载会记录完成数据队列)
@@ -63,7 +63,7 @@ export default class AssetsManager extends cc.EventTarget {
         }
 
         if (App.DeviceUtils.IsNative) {
-            this._storagePath = ((jsb.fileUtils ? jsb.fileUtils.getWritablePath() : '/') + AssetsManager.LOCAL_STORAGE_ASSET_FOLDER);
+            this._storagePath = ((jsb.fileUtils ? jsb.fileUtils.getWritablePath() : '/') + AssetsDownloadManager.LOCAL_STORAGE_ASSET_FOLDER);
 
             if (jsb.fileUtils.isDirectoryExist(this._storagePath) == false) {
                 jsb.fileUtils.createDirectory(this._storagePath);
@@ -78,13 +78,13 @@ export default class AssetsManager extends cc.EventTarget {
         this._assetDownloader = new AssetsDownload();
 
         this._moduleName = moduleName;
-        this._moduleManifestKey = AssetsManager.LOCAL_STORAGE_KEY_MODULE_PROJECT_MANIFEST + "_" + moduleName;
-        this._moduleStateKey = AssetsManager.LOCAL_STORAGE_KEY_UPDATE_STATE + "_" + moduleName;
+        this._moduleManifestKey = AssetsDownloadManager.LOCAL_STORAGE_KEY_MODULE_PROJECT_MANIFEST + "_" + moduleName;
+        this._moduleStateKey = AssetsDownloadManager.LOCAL_STORAGE_KEY_UPDATE_STATE + "_" + moduleName;
 
         this._progress = 0;
         this._isUpdating = true;
 
-        this._loadLocalManifest(App.StringUtils.Format(AssetsManager.MODULE_PROJECT_MANIFEST_PATH, moduleName));
+        this._loadLocalManifest(App.StringUtils.Format(AssetsDownloadManager.MODULE_PROJECT_MANIFEST_PATH, moduleName));
     }
 
     /**
@@ -94,7 +94,7 @@ export default class AssetsManager extends cc.EventTarget {
         App.ResManager.loadRes(moduleAppManifestPath, cc.JsonAsset, function (error, content:ResourceItem) {
             if (error) {
                 Log.info(App.StringUtils.Format("【更新】获取游戏安装包中路径为 {0} 的资源清单文件失败:{1}", moduleAppManifestPath,error));
-                this._dispatchEvent(AssetEvent.LOCAL_PROJECT_MANIFEST_LOAD_FAIL);
+                this._dispatchEvent(AssetDownloadEvent.LOCAL_PROJECT_MANIFEST_LOAD_FAIL);
                 return;
             }
 
@@ -150,11 +150,11 @@ export default class AssetsManager extends cc.EventTarget {
                 // 本地资源版本小于远程版本时，提示有更新
                 if (HotUpdateConfig.debugVersion || this._localManifest.version < remoteVersion.version) {
                     Log.info(App.StringUtils.Format("【更新】当前版本号为 {0}，服务器版本号为 {1}, 有新版本可更新", this._localManifest.version, remoteVersion.version));
-                    this._dispatchEvent(AssetEvent.NEW_VERSION_FOUND);       // 触发有新版本事件
+                    this._dispatchEvent(AssetDownloadEvent.NEW_VERSION_FOUND);       // 触发有新版本事件
                 } else {
                     Log.info("【更新】当前为最新版本");
                     this._isUpdating = false;
-                    this._dispatchEvent(AssetEvent.NEW_VERSION);             // 触发已是最新版本事件
+                    this._dispatchEvent(AssetDownloadEvent.NEW_VERSION);             // 触发已是最新版本事件
                 }
             } catch (e) {
                 Log.error("【更新】远程路版本数据解析错误");
@@ -164,7 +164,7 @@ export default class AssetsManager extends cc.EventTarget {
         var error = function (error) {
             Log.info(App.StringUtils.Format("【更新】获取远程路径为 {0} 的版本文件失败", this._localManifest.remoteVersion));
             this._isUpdating = false;
-            this._dispatchEvent(AssetEvent.REMOTE_VERSION_MANIFEST_LOAD_FAILD);
+            this._dispatchEvent(AssetDownloadEvent.REMOTE_VERSION_MANIFEST_LOAD_FAILD);
         }.bind(this);
 
         if (HotUpdateConfig.testUpdate)
@@ -199,7 +199,7 @@ export default class AssetsManager extends cc.EventTarget {
 
                 this._isUpdating = false;
 
-                this._dispatchEvent(AssetEvent.REMOTE_PROJECT_MANIFEST_LOAD_FAILD);
+                this._dispatchEvent(AssetDownloadEvent.REMOTE_PROJECT_MANIFEST_LOAD_FAILD);
             }.bind(this);
 
             if (HotUpdateConfig.testUpdate)
@@ -227,7 +227,7 @@ export default class AssetsManager extends cc.EventTarget {
             this._remoteManifest.assets[relativePath].state = true;
             LocalStorageUtils.setItem(this._moduleStateKey, JSON.stringify(this._remoteManifest));
 
-            this._dispatchEvent(AssetEvent.PROGRESS);
+            this._dispatchEvent(AssetDownloadEvent.PROGRESS);
         }.bind(this);
 
         // 触发热更完成事件
@@ -245,19 +245,19 @@ export default class AssetsManager extends cc.EventTarget {
             LocalStorageUtils.setItem(this._moduleManifestKey, JSON.stringify(this._remoteManifest));
 
             // 触发热更完成事件
-            this._dispatchEvent(AssetEvent.SUCCESS);
+            this._dispatchEvent(AssetDownloadEvent.SUCCESS);
         }.bind(this);
 
         // 触发热更失败事件
         this._assetDownloader.onFail = function () {
             this._isUpdating = false;
-            this._dispatchEvent(AssetEvent.FAILED);
+            this._dispatchEvent(AssetDownloadEvent.FAILED);
         }.bind(this);
 
         // 触发断网事件
         this._assetDownloader.onNoNetwork = function () {
             this._isUpdating = false;
-            this._dispatchEvent(AssetEvent.NO_NETWORK);
+            this._dispatchEvent(AssetDownloadEvent.NO_NETWORK);
         }.bind(this);
 
         this._assetDownloader.download(this._storagePath, this._localManifest, this._remoteManifest);
@@ -296,7 +296,7 @@ export default class AssetsManager extends cc.EventTarget {
 
         // 加载安装包中的版本清单文件
         var loadAppManifest = function (moduleName, modules, versions, remoteVersionLoadComplete) {
-            var appManifestPath = App.StringUtils.Format(AssetsManager.MODULE_PROJECT_MANIFEST_PATH, moduleName);
+            var appManifestPath = App.StringUtils.Format(AssetsDownloadManager.MODULE_PROJECT_MANIFEST_PATH, moduleName);
             App.ResManager.loadRes(appManifestPath, cc.TextAsset, function (error, content) {
                 if (error) {
                     Log.error(App.StringUtils.Format("【更新】验证是否有覆盖安装时，获取游戏安装包中路径为 {0} 的资源清单文件失败", appManifestPath));
@@ -305,7 +305,7 @@ export default class AssetsManager extends cc.EventTarget {
 
                 var storagePath: string;
                 if (App.DeviceUtils.IsNative) {
-                    storagePath = ((jsb.fileUtils ? jsb.fileUtils.getWritablePath() : '/') + AssetsManager.LOCAL_STORAGE_ASSET_FOLDER);
+                    storagePath = ((jsb.fileUtils ? jsb.fileUtils.getWritablePath() : '/') + AssetsDownloadManager.LOCAL_STORAGE_ASSET_FOLDER);
                 } else {
                     storagePath = "";
                 }
@@ -314,7 +314,7 @@ export default class AssetsManager extends cc.EventTarget {
                 var appVersion = appManifest.version;
 
                 // 获取本地版本清单信息
-                var moduleManifest = AssetsManager.LOCAL_STORAGE_KEY_MODULE_PROJECT_MANIFEST + "_" + moduleName;
+                var moduleManifest = AssetsDownloadManager.LOCAL_STORAGE_KEY_MODULE_PROJECT_MANIFEST + "_" + moduleName;
                 var manifest = LocalStorageUtils.getItem(moduleManifest);
                 if (manifest) {
                     var localManifest = JSON.parse(manifest);
@@ -383,11 +383,11 @@ export default class AssetsManager extends cc.EventTarget {
     public delete(moduleName) {
         var storagePath: string;
         if (App.DeviceUtils.IsNative) {
-            storagePath = ((jsb.fileUtils ? jsb.fileUtils.getWritablePath() : '/') + AssetsManager.LOCAL_STORAGE_ASSET_FOLDER);
+            storagePath = ((jsb.fileUtils ? jsb.fileUtils.getWritablePath() : '/') + AssetsDownloadManager.LOCAL_STORAGE_ASSET_FOLDER);
         } else {
             storagePath = "";
         }
-        var data = LocalStorageUtils.getItem(AssetsManager.LOCAL_STORAGE_KEY_MODULE_PROJECT_MANIFEST + "_" + moduleName);
+        var data = LocalStorageUtils.getItem(AssetsDownloadManager.LOCAL_STORAGE_KEY_MODULE_PROJECT_MANIFEST + "_" + moduleName);
         if (data) {
             try {
                 var localManifest = JSON.parse(data);
@@ -403,8 +403,8 @@ export default class AssetsManager extends cc.EventTarget {
                 cc.error("【更新】删除模块时,本地版本清单数据解析错误");
             }
 
-            LocalStorageUtils.removeItem(AssetsManager.LOCAL_STORAGE_KEY_MODULE_PROJECT_MANIFEST + "_" + moduleName);
-            LocalStorageUtils.removeItem(AssetsManager.LOCAL_STORAGE_KEY_UPDATE_STATE + "_" + moduleName);
+            LocalStorageUtils.removeItem(AssetsDownloadManager.LOCAL_STORAGE_KEY_MODULE_PROJECT_MANIFEST + "_" + moduleName);
+            LocalStorageUtils.removeItem(AssetsDownloadManager.LOCAL_STORAGE_KEY_UPDATE_STATE + "_" + moduleName);
         }
     }
 }
