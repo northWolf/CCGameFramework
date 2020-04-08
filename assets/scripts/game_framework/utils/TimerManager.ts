@@ -106,11 +106,11 @@ export default class TimerManager extends BaseClass {
      * @param repeatCount 执行次数, 0为无限次
      * @param method 执行函数
      * @param methodObj 执行函数所属对象
-     * @param complateMethod 完成执行函数
-     * @param complateMethodObj 完成执行函数所属对象
+     * @param completeMethod 完成执行函数
+     * @param completeMethodObj 完成执行函数所属对象
      */
-    public doTimer(delay: number, repeatCount: number, method: Function, methodObj: any, complateMethod: Function = null, complateMethodObj: any = null): void {
-        this.create(false, delay, repeatCount, method, methodObj, complateMethod, complateMethodObj);
+    public doTimer(delay: number, repeatCount: number, method: Function, methodObj: any, completeMethod: Function = null, completeMethodObj: any = null): void {
+        this.create(false, delay, repeatCount, method, methodObj, completeMethod, completeMethodObj);
     }
 
     /**
@@ -119,11 +119,11 @@ export default class TimerManager extends BaseClass {
      * @param repeatCount 执行次数, 0为无限次
      * @param method 执行函数
      * @param methodObj 执行函数所属对象
-     * @param complateMethod 完成执行函数
-     * @param complateMethodObj 完成执行函数所属对象
+     * @param completeMethod 完成执行函数
+     * @param completeMethodObj 完成执行函数所属对象
      */
-    public doFrame(delay: number, repeatCount: number, method: Function, methodObj: any, complateMethod: Function = null, complateMethodObj: any = null): void {
-        this.create(true, delay, repeatCount, method, methodObj, complateMethod, complateMethodObj);
+    public doFrame(delay: number, repeatCount: number, method: Function, methodObj: any, completeMethod: Function = null, completeMethodObj: any = null): void {
+        this.create(true, delay, repeatCount, method, methodObj, completeMethod, completeMethodObj);
     }
 
     /**

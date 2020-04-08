@@ -141,6 +141,19 @@ export default class LoginView extends BaseFguiView {
             LocalStorageUtils.clearAll();
         }, this);
 
+        FairyGUIUtil.GFindChild(this._view, "btn_start_timer").onClick(function () {
+            this.logToView("开始计时器");
+            let count = 1;
+            App.TimerManager.doTimer(1000,0,function(){
+                this.logToView(count ++ );
+            }.bind(this),this);
+        }, this);
+
+        FairyGUIUtil.GFindChild(this._view, "btn_stop_timer").onClick(function () {
+            this.logToView("停止计时器");
+            App.TimerManager.removeAll(this);
+        }, this);
+
 
         this.logToView("LoginView 创建成功");
     }
