@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1136,640">
+  <displayList>
+    <graph id="n3_txxc" name="n3" xy="0,0" size="1136,640" type="rect" lineSize="0" fillColor="#ff333333">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <component id="n1_rftu" name="btn_log" src="rftu4" fileName="Button.xml" xy="104,75" size="235,51">
+      <Button title="Log演示"/>
+    </component>
+    <component id="n2_rftu" name="btn_http_request" src="rftu4" fileName="Button.xml" xy="104,146" size="235,51">
+      <Button title="HTTP请求"/>
+    </component>
+    <component id="n4_oarg" name="btn_web_socket" src="rftu4" fileName="Button.xml" xy="104,217" size="235,51">
+      <Button title="WebSocket连接"/>
+    </component>
+    <component id="n5_oarg" name="btn_login" src="rftu4" fileName="Button.xml" xy="104,288" size="235,51">
+      <Button title="渠道SDK登录"/>
+    </component>
+    <component id="n6_oarg" name="btn_unload_res" src="rftu4" fileName="Button.xml" xy="450,217" size="235,51">
+      <Button title="卸载UI资源"/>
+    </component>
+    <component id="n7_oarg" name="btn_play_bgm" src="rftu4" fileName="Button.xml" xy="104,369" size="235,51">
+      <Button title="播放背景音乐"/>
+    </component>
+    <component id="n8_oarg" name="btn_stop_bgm" src="rftu4" fileName="Button.xml" xy="104,453" size="235,51">
+      <Button title="停止背景音乐"/>
+    </component>
+    <component id="n9_oarg" name="btn_play_sound" src="rftu4" fileName="Button.xml" xy="104,534" size="235,51">
+      <Button title="播放音效"/>
+    </component>
+    <component id="n10_szln" name="btn_play_effect" src="rftu4" fileName="Button.xml" xy="450,146" size="235,51">
+      <Button title="插入龙骨特效到UI"/>
+    </component>
+    <component id="n11_szln" name="btn_hotupdate" src="rftu4" fileName="Button.xml" xy="793,75" size="235,51">
+      <Button title="热更新"/>
+    </component>
+    <component id="n17_tnv5" name="btn_hotupdate_result" src="rftu4" fileName="Button.xml" xy="793,146" size="235,51">
+      <Button title="验证热更新的结果"/>
+    </component>
+    <component id="n18_cmu5" name="btn_clear_local_storage" src="rftu4" fileName="Button.xml" xy="793,217" size="235,51">
+      <Button title="清空本地缓存"/>
+    </component>
+    <component id="n19_lijg" name="btn_restart_game" src="rftu4" fileName="Button.xml" xy="793,288" size="235,51">
+      <Button title="重启游戏"/>
+    </component>
+    <component id="n20_lbp7" name="btn_load_effect" src="rftu4" fileName="Button.xml" xy="450,75" size="235,51">
+      <Button title="加载龙骨特效资源"/>
+    </component>
+    <text id="n21_lbp7" name="n21" xy="403,536" size="131,44" fontSize="35" color="#ffffff" text="Log信息"/>
+    <text id="n22_lbp7" name="tf_log" xy="556,536" size="519,75" fontSize="20" color="#ffffff" autoSize="none" autoClearText="true" text="这里是Log信息"/>
+  </displayList>
+</component>
