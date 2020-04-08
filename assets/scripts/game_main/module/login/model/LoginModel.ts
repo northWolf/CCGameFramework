@@ -1,5 +1,5 @@
-import BaseModel from "../../../game_framework/mvc/model/BaseModel";
-import BaseController from "../../../game_framework/mvc/controller/BaseController";
+import BaseModel from "../../../../game_framework/mvc/model/BaseModel";
+import BaseController from "../../../../game_framework/mvc/controller/BaseController";
 
 export default class LoginModel extends BaseModel {
 

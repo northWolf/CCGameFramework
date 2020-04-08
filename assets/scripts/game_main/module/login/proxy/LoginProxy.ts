@@ -1,5 +1,5 @@
-import BaseController from "../../../game_framework/mvc/controller/BaseController";
-import BaseProxy from "../../../game_framework/mvc/proxy/BaseProxy";
+import BaseController from "../../../../game_framework/mvc/controller/BaseController";
+import BaseProxy from "../../../../game_framework/mvc/proxy/BaseProxy";
 
 export default class LoginProxy extends BaseProxy {
     public constructor($controller: BaseController) {

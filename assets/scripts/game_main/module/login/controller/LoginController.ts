@@ -1,12 +1,12 @@
-import BaseController from "../../../game_framework/mvc/controller/BaseController";
-import LayerManager from "../../../game_framework/layer/LayerManager";
-import App from "../../../game_framework/App";
-import LoginView from "./LoginView";
-import LoginModel from "./LoginModel";
-import LoginProxy from "./LoginProxy";
-import Log from "../../../game_framework/utils/Log";
-import LoginConst from "./LoginConst";
-import {ViewConst} from "../../consts/ViewConst";
+import BaseController from "../../../../game_framework/mvc/controller/BaseController";
+import LayerManager from "../../../../game_framework/layer/LayerManager";
+import App from "../../../../game_framework/App";
+import LoginView from "../view/LoginView";
+import LoginModel from "../model/LoginModel";
+import LoginProxy from "../proxy/LoginProxy";
+import Log from "../../../../game_framework/utils/Log";
+import LoginConst from "../LoginConst";
+import {ViewConst} from "../../../consts/ViewConst";
 
 export default class LoginController extends BaseController {
     /** 本模块的数据存储 */

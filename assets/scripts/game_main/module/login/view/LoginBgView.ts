@@ -1,7 +1,7 @@
-import BaseSpriteView from "../../../game_framework/mvc/view/BaseSpriteView";
-import BaseController from "../../../game_framework/mvc/controller/BaseController";
-import BaseSpriteLayer from "../../../game_framework/layer/BaseSpriteLayer";
-import App from "../../../game_framework/App";
+import BaseSpriteView from "../../../../game_framework/mvc/view/BaseSpriteView";
+import BaseController from "../../../../game_framework/mvc/controller/BaseController";
+import BaseSpriteLayer from "../../../../game_framework/layer/BaseSpriteLayer";
+import App from "../../../../game_framework/App";
 
 export default class LoginBgView extends BaseSpriteView {
 

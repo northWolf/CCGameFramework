@@ -1,7 +1,7 @@
 import BaseScene from "../../game_framework/scene/base/BaseScene";
 import LayerManager from "../../game_framework/layer/LayerManager";
 import App from "../../game_framework/App";
-import LoginController from "../module/login/LoginController";
+import LoginController from "../module/login/controller/LoginController";
 import {ControllerConst} from "../consts/ControllerConst";
 import Log from "../../game_framework/utils/Log";
 

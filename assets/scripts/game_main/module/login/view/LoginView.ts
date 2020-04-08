@@ -1,17 +1,17 @@
-import BaseFguiView from "../../../game_framework/mvc/view/BaseFguiView";
-import BaseFguiLayer from "../../../game_framework/layer/BaseFguiLayer";
-import BaseController from "../../../game_framework/mvc/controller/BaseController";
-import Log from "../../../game_framework/utils/Log";
-import FairyGUIUtil from "../../misc/FairyGUIUtil";
-import App from "../../../game_framework/App";
-import ByteArrayMsgByProtobuf from "../../net/ByteArrayMsgByProtobuf";
-import {DefaultNetChannel} from "../../net/DefaultNetChannel";
-import {NetChannelType} from "../../../game_framework/net/socket/SocketEnum";
-import ChannelID from "../../../game_framework/sdk/ChannelID";
-import DefaultChannel from "../../sdk/default/DefaultChannel";
-import LoginConst from "./LoginConst";
-import ResourceItem from "../../../game_framework/resource/ResourceItem";
-import LocalStorageUtils from "../../../game_framework/utils/LocalStorageUtils";
+import BaseFguiView from "../../../../game_framework/mvc/view/BaseFguiView";
+import BaseFguiLayer from "../../../../game_framework/layer/BaseFguiLayer";
+import BaseController from "../../../../game_framework/mvc/controller/BaseController";
+import Log from "../../../../game_framework/utils/Log";
+import FairyGUIUtil from "../../../misc/FairyGUIUtil";
+import App from "../../../../game_framework/App";
+import ByteArrayMsgByProtobuf from "../../../net/ByteArrayMsgByProtobuf";
+import {DefaultNetChannel} from "../../../net/DefaultNetChannel";
+import {NetChannelType} from "../../../../game_framework/net/socket/SocketEnum";
+import ChannelID from "../../../../game_framework/sdk/ChannelID";
+import DefaultChannel from "../../../sdk/default/DefaultChannel";
+import LoginConst from "../LoginConst";
+import ResourceItem from "../../../../game_framework/resource/ResourceItem";
+import LocalStorageUtils from "../../../../game_framework/utils/LocalStorageUtils";
 
 export default class LoginView extends BaseFguiView {
 
@@ -41,7 +41,7 @@ export default class LoginView extends BaseFguiView {
         this.addToParent();
 
         FairyGUIUtil.GFindChild(this._view, "btn_log").onClick(function () {
-            Log.info("准备演示框架功能");
+            this.logToView("准备演示框架功能");
         }, this);
 
         FairyGUIUtil.GFindChild(this._view, "btn_http_request").onClick(function () {
@@ -51,12 +51,12 @@ export default class LoginView extends BaseFguiView {
             _data["gameVersion"] = "1.0";
             _data["platform"] = "android";
             App.Http.httpGET("https://ares.hbwyzg.com/api/get_global_info", _data, function (response) {
-                Log.info(response);
-            });
+                this.logToView(response);
+            }.bind(this));
         }, this);
 
         FairyGUIUtil.GFindChild(this._view, "btn_web_socket").onClick(function () {
-            Log.info("准备连接服务器");
+            this.logToView("准备连接服务器");
             App.Net.createNetChannelWithIpPort(DefaultNetChannel.NetChannel_Hall.toString(),
                 NetChannelType.SOCKET, App.GlobalInfo.GateServerIp, App.GlobalInfo.GateServerPort, new ByteArrayMsgByProtobuf());
             App.Net.setNetChannelReconnectFlagAndMaxCount(DefaultNetChannel.NetChannel_Hall.toString(), true, 3);
@@ -64,75 +64,85 @@ export default class LoginView extends BaseFguiView {
         }, this);
 
         FairyGUIUtil.GFindChild(this._view, "btn_login").onClick(function () {
-            Log.info("准备渠道登录");
+            this.logToView("准备渠道登录");
             App.SDK.init(new DefaultChannel(ChannelID.DEFAULT));
             App.SDK.getChannel().login(null, function () {
-                Log.info("登录成功");
-            });
+                this.logToView("登录成功");
+            }.bind(this));
 
         }, this);
 
         FairyGUIUtil.GFindChild(this._view, "btn_unload_res").onClick(function () {
-            Log.info("卸载MainMenu UI包资源");
+            this.logToView("卸载MainMenu UI包资源");
             fgui.UIPackage.removePackage(LoginConst.LOGIN_UI_PKG.name);
             App.ResManager.releaseDir(LoginConst.LOGIN_UI_PKG.path);
         }, this);
 
         FairyGUIUtil.GFindChild(this._view, "btn_play_bgm").onClick(function () {
-            Log.info("播放背景音乐");
+            this.logToView("播放背景音乐");
             App.SoundManager.playBg("sound/bgm_lobby");
         }, this);
 
         FairyGUIUtil.GFindChild(this._view, "btn_stop_bgm").onClick(function () {
-            Log.info("停止背景音乐");
+            this.logToView("停止背景音乐");
             App.SoundManager.stopBg();
         }, this);
 
         FairyGUIUtil.GFindChild(this._view, "btn_play_sound").onClick(function () {
-            Log.info("播放金币音效");
+            this.logToView("播放金币音效");
             App.SoundManager.playEffect("sound/sfx_coins");
         }, this);
 
-        FairyGUIUtil.GFindChild(this._view, "btn_play_effect").onClick(function () {
-            Log.info("插入龙骨特效到UI");
+        FairyGUIUtil.GFindChild(this._view, "btn_load_effect").onClick(function () {
+            this.logToView("加载龙骨特效");
             App.ResManager.loadRes("animations/hall_act_xlch", cc.Asset, function () {
-                var asset = App.ResManager.getRes("animations/hall_act_xlch", cc.Asset);
-                var actorNode = cc.instantiate(asset);
-                actorNode.parent = FairyGUIUtil.GFindChild(this._view, "n10").node;
+                this.logToView("加载完成");
             }.bind(this));
         }, this);
 
-        FairyGUIUtil.GFindChild(this._view,"btn_hotupdate").onClick(function(){
-            Log.info("使用热更新管理器");
+        FairyGUIUtil.GFindChild(this._view, "btn_play_effect").onClick(function () {
+            this.logToView("插入龙骨特效到UI");
+            var asset = App.ResManager.getRes("animations/hall_act_xlch", cc.Asset);
+            if (asset) {
+                var actorNode = cc.instantiate(asset);
+                actorNode.parent = FairyGUIUtil.GFindChild(this._view, "btn_play_effect").node;
+            } else {
+                this.logToView("未加载 animations/hall_act_xlch 资源");
+            }
+
+        }, this);
+
+        FairyGUIUtil.GFindChild(this._view, "btn_hotupdate").onClick(function () {
+            this.logToView("使用热更新管理器");
             var moduleName = "inbuilt";
-            App.HotUpdateManager.init(moduleName,function(){
-                Log.info("检查资源版本完毕");
-            },function(){
-                Log.info("更新资源完毕");
-            },function(){
-                Log.info("正在更新资源，进度为：" + App.HotUpdateManager.getProgress(moduleName));
-            },function(){
-                Log.info("已是新版本");
+            App.HotUpdateManager.init(moduleName, function () {
+                this.logToView("检查资源版本完毕");
+            }, function () {
+                this.logToView("更新资源完毕");
+            }, function () {
+                this.logToView("正在更新资源，进度为：" + App.HotUpdateManager.getProgress(moduleName));
+            }, function () {
+                this.logToView("已是新版本");
             });
             App.HotUpdateManager.check(moduleName);
-        },this);
+        }, this);
 
-        FairyGUIUtil.GFindChild(this._view,"btn_hotupdate_result").onClick(function(){
-            Log.info("热更新的结果：1");
-        },this);
+        FairyGUIUtil.GFindChild(this._view, "btn_hotupdate_result").onClick(function () {
+            this.logToView("热更新的结果：1");
+        }, this);
 
-        FairyGUIUtil.GFindChild(this._view,"btn_restart_game").onClick(function(){
-            Log.info("重启游戏");
+        FairyGUIUtil.GFindChild(this._view, "btn_restart_game").onClick(function () {
+            this.logToView("重启游戏");
             cc.game.restart();
-        },this);
+        }, this);
 
-        FairyGUIUtil.GFindChild(this._view,"btn_clear_local_storage").onClick(function(){
-            Log.info("清理本地缓存");
-           LocalStorageUtils.clearAll();
-        },this);
+        FairyGUIUtil.GFindChild(this._view, "btn_clear_local_storage").onClick(function () {
+            this.logToView("清理本地缓存");
+            LocalStorageUtils.clearAll();
+        }, this);
 
 
-        Log.info("LoginView 创建成功");
+        this.logToView("LoginView 创建成功");
     }
 
     /**
@@ -164,5 +174,11 @@ export default class LoginView extends BaseFguiView {
     public loginSuccess(): void {
         // TODO登陆成功处理
 
+    }
+
+    private logToView(content:string):void
+    {
+        FairyGUIUtil.GFindChild(this._view,"tf_log").text = content;
+        Log.info(content);
     }
 }

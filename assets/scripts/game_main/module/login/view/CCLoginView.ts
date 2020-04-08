@@ -1,7 +1,7 @@
-import BaseController from "../../../game_framework/mvc/controller/BaseController";
-import App from "../../../game_framework/App";
-import BaseCCUIView from "../../../game_framework/mvc/view/BaseCCUIView";
-import BaseCCUILayer from "../../../game_framework/layer/BaseCCUILayer";
+import BaseController from "../../../../game_framework/mvc/controller/BaseController";
+import App from "../../../../game_framework/App";
+import BaseCCUIView from "../../../../game_framework/mvc/view/BaseCCUIView";
+import BaseCCUILayer from "../../../../game_framework/layer/BaseCCUILayer";
 
 export default class CCLoginView extends BaseCCUIView {
 
