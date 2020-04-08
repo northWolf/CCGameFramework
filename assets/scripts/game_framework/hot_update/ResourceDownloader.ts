@@ -3,9 +3,8 @@ import Manifest from "./Manifest";
 import HotUpdateConfig from "./HotUpdateConfig";
 import App from "../App";
 import HttpRequest from "./HttpRequest";
-import DeviceUtils from "../utils/DeviceUtils";
 
-export default class AssetsDownload {
+export default class ResourceDownloader {
     private _storagePath: string;
     private _localManifest: Manifest;
     private _remoteManifest: Manifest;

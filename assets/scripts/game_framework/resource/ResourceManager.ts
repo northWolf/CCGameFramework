@@ -9,7 +9,7 @@ export default class ResourceManager extends BaseClass {
     private resCache = {}
     private dirCache = {};
 
-    getKey(url: string) {
+    public getKey(url: string) {
         let key = App.PathUtil.getFileNameWithoutExtension(url);
         return key;
     }
@@ -20,11 +20,11 @@ export default class ResourceManager extends BaseClass {
      * @param _type
      * @param callback
      */
-    load(url: string, callback: (err: string, res: ResourceItem) => void, _type?:string) {
+    public load(url: string, _type?: string, callback?: (err: string, res: ResourceItem) => void) {
         let ts = this.getKey(url);
         let item: ResourceItem = this.resCache[ts];
         if (item && item.isDone()) {
-            callback(null, item);
+            if (callback) callback(null, item);
             return;
         } else {
             item = new ResourceItem(ts);
@@ -40,13 +40,13 @@ export default class ResourceManager extends BaseClass {
                 } else {
                     Log.warn(" res load fail url is " + url);
                     this.resCache[ts] = null;
-                    callback(err, null);
+                    if (callback) callback(err, null);
                 }
             } else {
                 item.cacheRes(res);
                 if (this.resCache[ts]) {
                     item.setLoadingFlag(true)
-                    callback(err, item);
+                    if (callback) callback(err, item);
                 } else {
                     item.releaseAlreadyDeleteRes();
                 }
@@ -72,12 +72,12 @@ export default class ResourceManager extends BaseClass {
      * @param type
      * @param callback
      */
-    loadRes(url: string, type: typeof cc.Asset, callback: (err: string, res: ResourceItem) => void) {
+    public loadRes(url: string, type: typeof cc.Asset, callback?: (err: string, res: ResourceItem) => void) {
         let ts = this.getKey(url);
         let item: ResourceItem = this.resCache[ts]
         // Log.info(" loadRes url ",url,' ts ',ts);
         if (item && item.isDone()) {
-            callback(null, item);
+            if (callback) callback(null, item);
             return;
         } else {
             item = new ResourceItem(ts, type);
@@ -93,13 +93,13 @@ export default class ResourceManager extends BaseClass {
                 } else {
                     Log.warn(" res load fail url is " + url);
                     this.resCache[ts] = null;
-                    callback(err, null);
+                    if (callback) callback(err, null);
                 }
             } else {
                 item.cacheRes(res);
                 if (this.resCache[ts]) {
                     item.setLoadingFlag(true)
-                    callback(err, item);
+                    if (callback) callback(err, item);
                 } else {
                     item.releaseAlreadyDeleteRes();
                 }
@@ -112,10 +112,10 @@ export default class ResourceManager extends BaseClass {
      * 并行加载多个资源。
      * @param list 需要加载的资源列表
      * @param type 需要加载的资源类型，要求所有资源统一类型
-     * @param func 加载后的回调
+     * @param callback 加载后的回调
      * @param loader 资源加载管理器，默认是全局管理器。
      */
-    loadResArray(list: Array<string>, type: typeof cc.Asset, func: (err: string) => void) {
+    public loadResArray(list: Array<string>, type: typeof cc.Asset, callback?: (err: string) => void) {
         let resCount = 0;
         for (let index = 0; index < list.length; index++) {
             const element = list[index];
@@ -124,23 +124,21 @@ export default class ResourceManager extends BaseClass {
                 // 不论是否都加载成功都返回。
                 if (err) {
                     Log.info(err);
-                    func(err);
+                    if (callback) callback(err);
                     return;
                 }
                 resCount++;
                 if (resCount >= list.length) {
-                    if (func) {
-                        func(null);
-                    }
+                    if (callback) callback(null);
                 }
             });
         }
     }
 
-    loadResDir(path: string, callback: (err: string, res: ResourceItem) => void) {
+    public loadResDir(path: string, callback?: (err: string, res: ResourceItem) => void) {
         let item: ResourceDirectory = this.dirCache[path]
         if (item && item.isDone()) {
-            callback(null, item);
+            if (callback) callback(null, item);
             return;
         } else {
             item = new ResourceDirectory(path);
@@ -156,7 +154,7 @@ export default class ResourceManager extends BaseClass {
                 } else {
                     Log.warn(" res load fail url is " + path);
                     this.dirCache[path] = null;
-                    callback(err, null);
+                    if (callback) callback(err, null);
                 }
             } else {
                 item.cacheRes(res);
@@ -176,7 +174,7 @@ export default class ResourceManager extends BaseClass {
      * @param url
      * @param type
      */
-    getRes(url: string, type: typeof cc.Asset) {
+    public getRes(url: string, type: typeof cc.Asset) {
         let ts = this.getKey(url)
         let item = this.resCache[ts];
         if (item) {
@@ -197,12 +195,12 @@ export default class ResourceManager extends BaseClass {
         return null;
     }
 
-    preloadScene(url: string, callback: (err: string, res: ResourceItem) => void) {
+    public preloadScene(url: string, callback?: (err: string, res: ResourceItem) => void) {
         let type = cc.SceneAsset
         let ts = this.getKey(url)
         let item: ResourceItem = this.resCache[ts]
         if (item) {
-            callback(null, item);
+            if (callback) callback(null, item);
             return;
         }
         item = new ResourceItem(url, cc.SceneAsset);
@@ -215,12 +213,12 @@ export default class ResourceManager extends BaseClass {
                 } else {
                     Log.error(" res load fail sceneName is " + url);
                     this.resCache[ts] = null;
-                    callback(err, null);
+                    if (callback) callback(err, null);
                 }
             } else {
                 item.cacheRes(res);
                 if (this.resCache[ts]) {
-                    callback(err, item);
+                    if (callback) callback(err, item);
                 } else {
                     item.releaseAlreadyDeleteRes();
                 }
@@ -235,7 +233,7 @@ export default class ResourceManager extends BaseClass {
      * @param url
      * @param type
      */
-    releaseRes(url: string, type: typeof cc.Asset) {
+    public releaseRes(url: string, type: typeof cc.Asset) {
         let ts = this.getKey(url);
         let item = this.resCache[ts];
         if (item) {
@@ -245,7 +243,7 @@ export default class ResourceManager extends BaseClass {
         }
     }
 
-    releaseDir(path: string) {
+    public releaseDir(path: string) {
         let dir: ResourceDirectory = this.dirCache[path];
         if (dir) {
             if (dir.release()) {
@@ -257,7 +255,7 @@ export default class ResourceManager extends BaseClass {
     /**
      * 删除所有资源
      */
-    release() {
+    public release() {
         let resources: string[] = Object.keys(this.resCache);
         for (let index = 0; index < resources.length; index++) {
             const key = resources[index];

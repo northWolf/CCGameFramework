@@ -1,4 +1,4 @@
-import AssetsDownloadManager, {AssetDownloadEvent} from "./AssetsDownloadManager";
+import ResourceDownloaderManager, {ResourceDownloadEvent} from "./ResourceDownloaderManager";
 import HotUpdateConfig from "./HotUpdateConfig";
 import App from "../App";
 import LocalStorageUtils from "../utils/LocalStorageUtils";
@@ -10,10 +10,10 @@ export default class HotUpdateManager extends BaseClass{
     private _updates = {};            // 模块更新管理器集合
     private _queue = [];            // 更新队列
     private _isUpdating: boolean = false;         // 是否正在更新中
-    private _current:AssetsDownloadManager = null;          // 当前正在更新的模块
+    private _current:ResourceDownloaderManager = null;          // 当前正在更新的模块
     private _noComplete = {};            // 上次未完成的热更项
 
-    private assetManager: AssetsDownloadManager;
+    private assetManager: ResourceDownloaderManager;
 
     constructor() {
         super();
@@ -24,7 +24,7 @@ export default class HotUpdateManager extends BaseClass{
         this._current = null;
         this._noComplete = {};
 
-        this.assetManager = new AssetsDownloadManager();
+        this.assetManager = new ResourceDownloaderManager();
     }
 
     /**
@@ -81,18 +81,18 @@ export default class HotUpdateManager extends BaseClass{
     public init(name, onCheckComplete, onComplete, onProgress, onNewVersion) {
         HotUpdateConfig.concurrent = 2;
 
-        var am = new AssetsDownloadManager();
+        var am = new ResourceDownloaderManager();
         am.name = name;
         am.onCheckComplete = onCheckComplete;
         am.onComplete = onComplete;
-        am.on(AssetDownloadEvent.NEW_VERSION, onNewVersion);
-        am.on(AssetDownloadEvent.PROGRESS, onProgress);
-        am.on(AssetDownloadEvent.FAILED, this._onFailed.bind(this));
-        am.on(AssetDownloadEvent.NEW_VERSION_FOUND, this._onCheckComplete.bind(this));
-        am.on(AssetDownloadEvent.SUCCESS, this._onUpdateComplete.bind(this));
-        am.on(AssetDownloadEvent.REMOTE_VERSION_MANIFEST_LOAD_FAILD, this._onNetError.bind(this));
-        am.on(AssetDownloadEvent.REMOTE_PROJECT_MANIFEST_LOAD_FAILD, this._onNetError.bind(this));
-        am.on(AssetDownloadEvent.NO_NETWORK, this._onNetError.bind(this));
+        am.on(ResourceDownloadEvent.NEW_VERSION, onNewVersion);
+        am.on(ResourceDownloadEvent.PROGRESS, onProgress);
+        am.on(ResourceDownloadEvent.FAILED, this._onFailed.bind(this));
+        am.on(ResourceDownloadEvent.NEW_VERSION_FOUND, this._onCheckComplete.bind(this));
+        am.on(ResourceDownloadEvent.SUCCESS, this._onUpdateComplete.bind(this));
+        am.on(ResourceDownloadEvent.REMOTE_VERSION_MANIFEST_LOAD_FAILD, this._onNetError.bind(this));
+        am.on(ResourceDownloadEvent.REMOTE_PROJECT_MANIFEST_LOAD_FAILD, this._onNetError.bind(this));
+        am.on(ResourceDownloadEvent.NO_NETWORK, this._onNetError.bind(this));
 
         this._updates[name] = am;
     }
@@ -111,7 +111,7 @@ export default class HotUpdateManager extends BaseClass{
      * 检查版本是否需要更新
      */
     public check(name): void {
-        var am: AssetsDownloadManager = this._updates[name];
+        var am: ResourceDownloaderManager = this._updates[name];
         am.check(name);
     }
 
@@ -127,7 +127,7 @@ export default class HotUpdateManager extends BaseClass{
 
     private _onFailed(event): void {
         this._isUpdating = false;
-        var am: AssetsDownloadManager = event.target;
+        var am: ResourceDownloaderManager = event.target;
         am.check(am.name);
     }
 
@@ -144,7 +144,7 @@ export default class HotUpdateManager extends BaseClass{
         // 保存下在下载的模块状态
         this._saveNoCompleteModule();
 
-        var am: AssetsDownloadManager = event.target;
+        var am: ResourceDownloaderManager = event.target;
 
         if (am.onCheckComplete)
             am.onCheckComplete();
@@ -157,7 +157,7 @@ export default class HotUpdateManager extends BaseClass{
     }
 
     private _onUpdateComplete(event) {
-        var am: AssetsDownloadManager = event.target;
+        var am: ResourceDownloaderManager = event.target;
         if (am.onComplete)
             am.onComplete();
 
