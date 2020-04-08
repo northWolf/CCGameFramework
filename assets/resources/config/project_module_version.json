@@ -1,11 +1,11 @@
 {
 	"isUpdateVersion": true,
 	"line": "line1",
-	"server": "http://127.0.0.1:80/update/",
+	"server": "http://127.0.0.1/update/",
 	"modules": {
 		"inbuilt": {
 			"initial": "1.0.0.0001",
-			"current": "1.0.0.0001"
+			"current": "1.0.0.0002"
 		}
 	}
 }
