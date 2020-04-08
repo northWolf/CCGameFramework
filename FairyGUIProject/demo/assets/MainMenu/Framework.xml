@@ -48,5 +48,11 @@
     </component>
     <text id="n21_lbp7" name="n21" xy="403,536" size="131,44" fontSize="35" color="#ffffff" text="Log信息"/>
     <text id="n22_lbp7" name="tf_log" xy="556,536" size="519,75" fontSize="20" color="#ffffff" autoSize="none" autoClearText="true" text="这里是Log信息"/>
+    <component id="n23_ihp7" name="btn_start_timer" src="rftu4" fileName="Button.xml" xy="450,288" size="235,51">
+      <Button title="开始计时器"/>
+    </component>
+    <component id="n24_ihp7" name="btn_stop_timer" src="rftu4" fileName="Button.xml" xy="450,369" size="235,51">
+      <Button title="停止计时器"/>
+    </component>
   </displayList>
 </component>
