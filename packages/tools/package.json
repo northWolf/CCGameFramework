@@ -1,0 +1,20 @@
+{
+  "name": "tools",
+  "version": "0.0.1",
+  "description": "编辑器功能扩展",
+  "author": "CCGameFramework",
+  "main": "main.js",
+  "main-menu": {
+    "自定义工具/Tools": {
+      "message": "tools:openPanel"
+    }
+  },
+  "panel": {
+    "main": "panel/index.js",
+    "type": "dockable",
+    "title": "编辑器功能扩展",
+    "width": 400,
+    "height": 300
+  },
+  "scene-script": "scene-walker.js"
+}

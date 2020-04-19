@@ -3,16 +3,17 @@
 module.exports = {
   load () {
     // 当 package 被正确加载的时候执行
+    Editor.log('打开Tools面板');
   },
 
   unload () {
     // 当 package 被正确卸载的时候执行
+    Editor.log('关闭Tools面板');
   },
 
   messages: {
-    'say-hello' () {
-      Editor.log('Hello World!');
-      Editor.Panel.open('hello-world-package');
+    'openPanel' () {
+      Editor.Panel.open('tools');
     }
   },
 };
