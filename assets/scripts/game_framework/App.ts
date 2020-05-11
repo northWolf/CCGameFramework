@@ -22,6 +22,8 @@ import SoundManager from "./sound/SoundManager";
 import TimerManager from "./utils/TimerManager";
 import StringUtils from "./utils/StringUtils";
 import HotUpdateManager from "./hot_update/HotUpdateManager";
+import LayerManager from "./layer/LayerManager";
+import FairyGUIUtil from "../game_main/misc/FairyGUIUtil";
 
 export default class App {
 
@@ -203,7 +205,7 @@ export default class App {
         return StringUtils.getInstance();
     }
 
-    public static get HotUpdateManager():HotUpdateManager{
+    public static get HotUpdateManager(): HotUpdateManager {
         return HotUpdateManager.getInstance();
     }
 
@@ -218,5 +220,18 @@ export default class App {
         Log.info("当前引擎版本: ", cc.ENGINE_VERSION);
         App.DebugUtils.setThreshold(5);
         LocalStorageUtils.setHashID(App.BuildInfo.PackageName);
+    }
+
+    public static deinit(): void {
+        StateMachine.destroy();
+        SceneManager.destroy();
+        LayerManager.deinit();
+        ControllerManager.destroy();
+        ViewManager.destroy();
+        FairyGUIUtil.removeAllPackages();
+        App.ResManager.release();
+        ResourceManager.destroy();
+        App.StageUtils.clear();
+        StageUtils.destroy();
     }
 }

@@ -59,4 +59,15 @@ export default class LayerManager {
         this.UI_Tips = new BaseFguiLayer();
         this.UI_Loading = new BaseCCUILayer();
     }
+
+    public static deinit():void
+    {
+        this.Game_Bg = null;
+        this.Game_Main = null;
+        this.UI_Main = null;
+        this.UI_Popup = null;
+        this.UI_Message = null;
+        this.UI_Tips = null;
+        this.UI_Loading = null;
+    }
 }

@@ -29,11 +29,19 @@ export default class StageUtils extends BaseClass{
 
     public getStage():cc.Node
     {
-         return StageUtils._uiStage;
+         return StageUtils._stage;
     }
 
     public getCCUIStage():cc.Node
     {
         return StageUtils._uiStage;
+    }
+
+    public clear():void
+    {
+        StageUtils._uiStage.cleanup();
+        StageUtils._uiStage = null;
+        StageUtils._stage.cleanup();
+        StageUtils._stage = null;
     }
 }

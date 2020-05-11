@@ -33,4 +33,9 @@ export default class BaseClass {
         }
         return Class._instance;
     }
+
+    public static destroy() {
+        var Class: any = this;
+        Class._instance = null;
+    }
 }
