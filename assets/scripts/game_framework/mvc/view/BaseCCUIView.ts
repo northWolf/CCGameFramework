@@ -24,7 +24,7 @@ export default class BaseCCUIView implements IBaseView {
 
         this._isInit = false;
 
-        App.StageUtils.getStage().on(cc.Node.EventType.SIZE_CHANGED, this.onResize, this);
+        App.StageUtils.getCCUIStage().on(cc.Node.EventType.SIZE_CHANGED, this.onResize, this);
     }
 
     /**
