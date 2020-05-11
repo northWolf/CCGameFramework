@@ -3,11 +3,11 @@ import Log from "../../game_framework/utils/Log";
 import App from "../../game_framework/App";
 import LoginScene from "../scene/LoginScene";
 import {SceneConsts} from "../consts/SceneConsts";
-import {ViewConst} from "../consts/ViewConst";
 import GlobalInfo from "../../game_framework/consts/GlobalInfo";
 import ResourceItem from "../../game_framework/resource/ResourceItem";
 import {isNull} from "../../game_framework/utils/GlobalDefine";
 import LayerManager from "../../game_framework/layer/LayerManager";
+import ProcedureCheckVersion from "./ProcedureCheckVersion";
 
 export default class ProcedureLaunch extends ProcedureBase {
     constructor(owner: Object) {
@@ -37,8 +37,7 @@ export default class ProcedureLaunch extends ProcedureBase {
             fgui.GRoot.create();
             LayerManager.init();
             this.initScene();
-            App.SceneManager.runScene(SceneConsts.Login);
-            App.ViewManager.open(ViewConst.Login);
+            App.Procedure.changeState(cc.js.getClassName(ProcedureCheckVersion));
         } else {
             console.log(err);
         }
