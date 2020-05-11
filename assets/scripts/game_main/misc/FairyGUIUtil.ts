@@ -1,5 +1,7 @@
 import Log from "../../game_framework/utils/Log";
 import LayerManager from "../../game_framework/layer/LayerManager";
+import Dictionary from "../../game_framework/utils/Dictionary";
+import App from "../../game_framework/App";
 
 export default class FairyGUIUtil {
     /** 记录所有的提示框 */
@@ -7,26 +9,49 @@ export default class FairyGUIUtil {
 
     public static packageFileExtension: string = "lh";
 
-     /**
+    private static loadedUIPackages: Dictionary = new Dictionary();
+
+    /**
      * 获取UI包
      * @param resKey ui包名
      */
-    public static GetUIPackageByName(pkgName: string):fgui.UIPackage
-    {
+    public static GetUIPackageByName(pkgName: string): fgui.UIPackage {
         return fgui.UIPackage.getByName(pkgName);
     }
 
     /**
      * 添加UI包
-     * @param resKey ui包名
-     * @param descData ui包的描述文件内容
+     * @param pkgName ui包的路径
      */
-    public static addPackage(pkgName: string): void {
-        if(!FairyGUIUtil.GetUIPackageByName(pkgName))
-        {
-            fgui.UIPackage.addPackage(pkgName);
-            Log.info("解析UI包:",pkgName,"完成");
+    public static addPackage(pkgUrl: string): void {
+        let pkgName: string = App.PathUtil.getFileNameInPath(pkgUrl);
+        if (!FairyGUIUtil.loadedUIPackages.has(pkgName)) {
+            let pkg: fgui.UIPackage = fgui.UIPackage.addPackage(pkgUrl);
+            FairyGUIUtil.loadedUIPackages.add(pkgName, pkg);
+            Log.info("解析UI包:", pkgName, "完成");
         }
+    }
+
+    /**
+     * 删除UI包
+     * @param pkgName ui包名
+     */
+    public static removePackage(pkgName: string): void {
+        if (FairyGUIUtil.GetUIPackageByName(pkgName)) {
+            fgui.UIPackage.removePackage(pkgName);
+            FairyGUIUtil.loadedUIPackages.del(pkgName);
+        }
+    }
+
+    /**
+     * 删除所有UI包
+     */
+    public static removeAllPackages(): void {
+        let names: Array<string> = FairyGUIUtil.loadedUIPackages.keys;
+        for (var name in names) {
+            FairyGUIUtil.removePackage(names[name]);
+        }
+        FairyGUIUtil.loadedUIPackages.clear();
     }
 
     /**
@@ -38,13 +63,12 @@ export default class FairyGUIUtil {
 
     /**
      * 根据字符串路劲返回类型为FGUI的子对象
-     * @param _com 自对象 
+     * @param _com 自对象
      * @param _path 以正斜杠/分割的路径
      * @return fgui.GObject对象
      */
     public static GFindChild(_com, _path: string): fgui.GObject {
-        if(_com != null)
-        {
+        if (_com != null) {
             var _p_arr = _path.split("/");
             var _temp_com = _com;
 
@@ -56,9 +80,7 @@ export default class FairyGUIUtil {
                 }
             }
             return _temp_com;
-        }
-        else
-        {
+        } else {
             Log.trace("父组件是空的，子对象路径" + _path);
             return null;
         }
@@ -79,7 +101,10 @@ export default class FairyGUIUtil {
             LayerManager.UI_Tips.removeChild(commonPromptPanel);
             commonPromptPanel.dispose();
         }
-        commonPromptPanel.getChild("btn_cancle").onClick(() => { cancelCallBack(); },this);
+
+        commonPromptPanel.getChild("btn_cancle").onClick(() => {
+            cancelCallBack();
+        }, this);
 
         function confirmCallBack() {
             if (_confirmCallback) {
@@ -88,7 +113,10 @@ export default class FairyGUIUtil {
             commonPromptPanel.dispose();
             LayerManager.UI_Tips.removeChild(commonPromptPanel);
         }
-        commonPromptPanel.getChild("btn_confirm").onClick(() => { confirmCallBack(); },this);
+
+        commonPromptPanel.getChild("btn_confirm").onClick(() => {
+            confirmCallBack();
+        }, this);
         commonPromptPanel.center();
         LayerManager.UI_Tips.addChild(commonPromptPanel);
         commonPromptPanel.getTransition("start").play();
@@ -109,7 +137,10 @@ export default class FairyGUIUtil {
             commonPromptPanel.dispose();
             LayerManager.UI_Tips.removeChild(commonPromptPanel);
         }
-        commonPromptPanel.getChild("btn_confirm").onClick(() => { confirmCallBack(); },this);
+
+        commonPromptPanel.getChild("btn_confirm").onClick(() => {
+            confirmCallBack();
+        }, this);
         commonPromptPanel.center();
         LayerManager.UI_Tips.addChild(commonPromptPanel);
         commonPromptPanel.getTransition("start").play();
