@@ -157,7 +157,7 @@ export default class ResourceDownloaderManager extends cc.EventTarget {
                     this._dispatchEvent(ResourceDownloadEvent.NEW_VERSION);             // 触发已是最新版本事件
                 }
             } catch (e) {
-                Log.error("【更新】远程路版本数据解析错误");
+                Log.error("【更新】远程路径版本数据解析错误");
             }
         }.bind(this);
 
@@ -187,7 +187,7 @@ export default class ResourceDownloaderManager extends cc.EventTarget {
                 try {
                     this._remoteManifest = JSON.parse(content);
                 } catch (e) {
-                    Log.error("【更新】远程路版本清单数据解析错误");
+                    Log.error("【更新】远程路径版本清单数据解析错误");
                 }
 
                 // 分析并下载资源
