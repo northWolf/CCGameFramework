@@ -1,5 +1,4 @@
 import BaseChannel from "./base/BaseChannel";
-import ChannelID from "./ChannelID";
 import Platform from "./PlatformCallJS";
 import BaseClass from "../base/BaseClass";
 
@@ -21,10 +20,6 @@ export default class SDKManager extends BaseClass {
         if (this.channel) {
             this.channel.init();
         }
-    }
-
-    public isDev(): boolean {
-        return this.channel.getID() == ChannelID.DEFAULT;
     }
 
     public getChannel(): BaseChannel {

@@ -1,4 +1,4 @@
-import { ShareCallback } from "../ChannelID";
+import {ShareCallback} from "../SDKCallback";
 
 
 export default abstract class BaseShare {
@@ -8,7 +8,7 @@ export default abstract class BaseShare {
     protected callback:Function = null
 
     constructor() {
-        
+
     }
 
 

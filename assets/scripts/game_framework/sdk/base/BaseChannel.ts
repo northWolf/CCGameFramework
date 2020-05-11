@@ -6,7 +6,7 @@ import BaseBanner from "./BaseBanner";
 import BaseRewardAd, {RewardADState} from "./BaseRewardAd";
 import BaseRecorder from "./BaseRecorder";
 import BaseShare from "./BaseShare";
-import {LoginCallback, ShareCallback} from "../ChannelID";
+import {LoginCallback, ShareCallback} from "../SDKCallback";
 
 
 export default abstract class BaseChannel {

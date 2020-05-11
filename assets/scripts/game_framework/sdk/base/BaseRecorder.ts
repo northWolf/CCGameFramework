@@ -1,4 +1,4 @@
-import SDKDataEvent from "../SDKDataEvent";
+import SDKEvent from "../SDKEvent";
 import BaseModel from "../../mvc/model/BaseModel";
 import App from "../../App";
 
@@ -32,7 +32,7 @@ export default abstract class BaseRecorder extends BaseModel {
 
     changeState(s) {
         this.state = s;
-        App.MessageCenter.dispatch(SDKDataEvent.CHANGE_RECORDER_STATE, s);
+        App.MessageCenter.dispatch(SDKEvent.CHANGE_RECORDER_STATE, s);
     }
 
     getVideoPath() {

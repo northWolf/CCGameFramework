@@ -7,11 +7,12 @@ import App from "../../../../game_framework/App";
 import ByteArrayMsgByProtobuf from "../../../net/ByteArrayMsgByProtobuf";
 import {DefaultNetChannel} from "../../../net/DefaultNetChannel";
 import {NetChannelType} from "../../../../game_framework/net/socket/SocketEnum";
-import ChannelID from "../../../../game_framework/sdk/ChannelID";
+import ChannelID from "../../../sdk/ChannelID";
 import DefaultChannel from "../../../sdk/default/DefaultChannel";
 import LoginConst from "../LoginConst";
 import ResourceItem from "../../../../game_framework/resource/ResourceItem";
 import LocalStorageUtils from "../../../../game_framework/utils/LocalStorageUtils";
+import {ViewConst} from "../../../consts/ViewConst";
 
 export default class LoginView extends BaseFguiView {
 
@@ -35,7 +36,7 @@ export default class LoginView extends BaseFguiView {
     }
 
     private onUILoaded(err: string, res: ResourceItem) {
-        fgui.UIPackage.addPackage(App.PathUtil.getCombinePath(LoginConst.LOGIN_UI_PKG.path, LoginConst.LOGIN_UI_PKG.name));
+        FairyGUIUtil.addPackage(App.PathUtil.getCombinePath(LoginConst.LOGIN_UI_PKG.path,LoginConst.LOGIN_UI_PKG.name));
         this._view = fgui.UIPackage.createObject(LoginConst.LOGIN_UI_PKG.name, "Framework").asCom;
         this._view.makeFullScreen();
         this.addToParent();
@@ -74,7 +75,7 @@ export default class LoginView extends BaseFguiView {
 
         FairyGUIUtil.GFindChild(this._view, "btn_unload_res").onClick(function () {
             this.logToView("卸载MainMenu UI包资源");
-            fgui.UIPackage.removePackage(LoginConst.LOGIN_UI_PKG.name);
+            FairyGUIUtil.removePackage(LoginConst.LOGIN_UI_PKG.name);
             App.ResManager.releaseDir(LoginConst.LOGIN_UI_PKG.path);
         }, this);
 
@@ -133,6 +134,7 @@ export default class LoginView extends BaseFguiView {
 
         FairyGUIUtil.GFindChild(this._view, "btn_restart_game").onClick(function () {
             this.logToView("重启游戏");
+            App.deinit();
             cc.game.restart();
         }, this);
 
