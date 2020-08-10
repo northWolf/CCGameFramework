@@ -1,7 +1,5 @@
 {
-  "ver": "1.0.0",
+  "ver": "1.0.1",
   "uuid": "04768035-8124-49a1-99a2-0e707c5cd1d3",
-  "atlasJson": "{\"SubTexture\":[{\"width\":585,\"y\":1,\"height\":910,\"name\":\"血流成河_0006_后发\",\"x\":588},{\"width\":585,\"y\":913,\"height\":910,\"name\":\"血流成河_0005_左手\",\"x\":588},{\"width\":585,\"y\":1,\"height\":910,\"name\":\"血流成河_0004_身体\",\"x\":1},{\"width\":585,\"y\":913,\"height\":910,\"name\":\"血流成河_0003_头\",\"x\":1},{\"y\":1925,\"frameX\":-224,\"frameHeight\":910,\"frameY\":-102,\"width\":75,\"frameWidth\":585,\"height\":41,\"name\":\"血流成河_0002_闭眼\",\"x\":1},{\"y\":1825,\"frameX\":-292,\"frameHeight\":910,\"frameY\":-146,\"width\":25,\"frameWidth\":585,\"height\":81,\"name\":\"血流成河_0001_左耳环\",\"x\":59},{\"y\":1825,\"frameX\":-187,\"frameHeight\":910,\"frameY\":-146,\"width\":56,\"frameWidth\":585,\"height\":98,\"name\":\"血流成河_0000_右耳环\",\"x\":1}],\"width\":2048,\"imagePath\":\"hall_act_xlch_tex.png\",\"height\":2048,\"name\":\"hall_act_xlch\"}",
-  "texture": "c55a7462-d151-465d-a14e-7e97c6396c04",
   "subMetas": {}
 }
